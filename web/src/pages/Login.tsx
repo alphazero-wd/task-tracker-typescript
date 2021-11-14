@@ -1,17 +1,17 @@
-import { Container, Heading, LinkBox, Stack, Text } from '@chakra-ui/layout';
-import { Button } from '@chakra-ui/react';
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
-import AuthInput from '../components/Auth/AuthInput';
-import { login } from '../reducers/user';
-import { useAppDispatch, useAppSelector } from '../store';
+import { Container, Heading, LinkBox, Stack, Text } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/react";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { Link } from "react-router-dom";
+import AuthInput from "../components/Auth/AuthInput";
+import { login } from "../reducers/user";
+import { useAppDispatch, useAppSelector } from "../store";
 
 const Login: FC = () => {
-  const { error, loading } = useAppSelector((state) => state.user);
+  const { error, loading } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const [loginValues, setLoginValues] = useState({
-    usernameOrEmail: '',
-    password: '',
+    usernameOrEmail: "",
+    password: "",
   });
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -49,6 +49,10 @@ const Login: FC = () => {
             type="password"
             error={error}
           />
+
+          <LinkBox as={Link} color="blue.500" to="/forgot-password">
+            Forgot Password?
+          </LinkBox>
           <Button
             type="submit"
             colorScheme="blue"
@@ -60,7 +64,7 @@ const Login: FC = () => {
         </Stack>
       </form>
       <Text textAlign="center" mt={4}>
-        Don't Have An Account?{' '}
+        Don't Have An Account?{" "}
         <LinkBox as={Link} color="blue.500" to="/signup">
           Sign Up
         </LinkBox>

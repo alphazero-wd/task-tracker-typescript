@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as api from '../api';
-import { User } from '../utils/types';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import * as api from "../api";
+import { User } from "../utils/types";
 
 interface UserState {
   user: null | User;
@@ -14,7 +14,7 @@ interface ValidationError {
 }
 
 export const signUp = createAsyncThunk(
-  'user/signUp',
+  "user/signUp",
   async (formValue: api.SignUp, { rejectWithValue }) => {
     try {
       const { data } = await api.signUp(formValue);
@@ -26,7 +26,7 @@ export const signUp = createAsyncThunk(
 );
 
 export const login = createAsyncThunk(
-  'user/login',
+  "user/login",
   async (formValue: api.Login, { rejectWithValue }) => {
     try {
       const { data } = await api.login(formValue);
@@ -40,21 +40,21 @@ export const login = createAsyncThunk(
 const initialState: UserState = {
   error: null,
   loading: false,
-  user: JSON.parse(localStorage.getItem('user') as any) || null,
+  user: JSON.parse(localStorage.getItem("user") as any),
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
-    logout: (state) => {
+    logout: state => {
       localStorage.clear();
       state.user = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(signUp.pending, (state) => {
+      .addCase(signUp.pending, state => {
         state.loading = true;
       })
       .addCase(signUp.fulfilled, (state, action) => {
@@ -68,7 +68,7 @@ const userSlice = createSlice({
       });
 
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(login.pending, state => {
         state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
@@ -82,4 +82,5 @@ const userSlice = createSlice({
       });
   },
 });
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;

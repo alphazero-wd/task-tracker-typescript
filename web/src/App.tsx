@@ -1,6 +1,7 @@
 import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -25,6 +26,7 @@ function App() {
             path="/login"
             element={!user ? <Login /> : <Navigate to="/" />}
           />
+          <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

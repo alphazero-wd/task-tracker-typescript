@@ -1,12 +1,12 @@
-import { Alert, AlertIcon } from '@chakra-ui/alert';
-import { Input, InputGroup } from '@chakra-ui/input';
-import { ChangeEvent, FC } from 'react';
+import { Alert, AlertIcon } from "@chakra-ui/alert";
+import { Input, InputGroup } from "@chakra-ui/input";
+import { ChangeEvent, FC } from "react";
 interface InputProps {
-  type?: 'password' | 'email';
+  type?: "password" | "email";
   placeholder: string;
   name: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  error: {
+  error?: {
     field?: string;
     message?: string;
   } | null;
@@ -25,7 +25,7 @@ const AuthInput: FC<InputProps> = ({
           onChange={onChange}
           placeholder={placeholder}
           name={name}
-          type={type || 'text'}
+          type={type || "text"}
           isInvalid={error && error?.field === name ? true : false}
         />
       </InputGroup>

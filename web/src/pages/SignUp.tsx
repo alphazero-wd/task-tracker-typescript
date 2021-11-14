@@ -1,26 +1,20 @@
-import {
-  Container,
-  Heading,
-  LinkBox,
-  SimpleGrid,
-  Text,
-} from '@chakra-ui/layout';
-import { Button, Stack } from '@chakra-ui/react';
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '../store';
-import AuthInput from '../components/Auth/AuthInput';
-import { signUp } from '../reducers/user';
-import { SignUp as SignUpInterface } from '../api';
-import { Link } from 'react-router-dom';
+import { Container, Heading, LinkBox, Text } from "@chakra-ui/layout";
+import { Button, Stack } from "@chakra-ui/react";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { useAppSelector, useAppDispatch } from "../store";
+import AuthInput from "../components/Auth/AuthInput";
+import { signUp } from "../reducers/user";
+import { SignUp as SignUpInterface } from "../api";
+import { Link } from "react-router-dom";
 
 const SignUp: FC = () => {
   const dispatch = useAppDispatch();
-  const { error, loading } = useAppSelector((state) => state.user);
+  const { error, loading } = useAppSelector(state => state.user);
   const [signUpValues, setSignUpValues] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSignUpValues({ ...signUpValues, [e.target.name]: e.target.value });
@@ -37,10 +31,10 @@ const SignUp: FC = () => {
     dispatch(signUp(newUser));
 
     setSignUpValues({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     });
   };
 
@@ -51,20 +45,18 @@ const SignUp: FC = () => {
       </Heading>
       <form onSubmit={onSubmit}>
         <Stack spacing={4} mt={5}>
-          <SimpleGrid columns={{ sm: 1, md: 2 }} spacing="1rem">
-            <AuthInput
-              onChange={onChange}
-              placeholder="Username"
-              name="username"
-              error={error}
-            />
-            <AuthInput
-              onChange={onChange}
-              placeholder="Email address"
-              name="email"
-              error={error}
-            />
-          </SimpleGrid>
+          <AuthInput
+            onChange={onChange}
+            placeholder="Username"
+            name="username"
+            error={error}
+          />
+          <AuthInput
+            onChange={onChange}
+            placeholder="Email address"
+            name="email"
+            error={error}
+          />
 
           <AuthInput
             onChange={onChange}
@@ -96,7 +88,7 @@ const SignUp: FC = () => {
         </Stack>
       </form>
       <Text textAlign="center" mt={4}>
-        Already Have An Account?{' '}
+        Already Have An Account?{" "}
         <LinkBox as={Link} to="/login" color="blue.500">
           Login
         </LinkBox>
