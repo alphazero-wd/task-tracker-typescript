@@ -1,5 +1,5 @@
 import { Container, Heading, LinkBox, Text } from "@chakra-ui/layout";
-import { Button, Stack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, Stack } from "@chakra-ui/react";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
 import AuthInput from "../components/Auth/AuthInput";
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const SignUp: FC = () => {
   const dispatch = useAppDispatch();
-  const { error, loading } = useAppSelector(state => state.user);
+  const { error, loading, message } = useAppSelector(state => state.user);
   const [signUpValues, setSignUpValues] = useState({
     username: "",
     email: "",
@@ -45,6 +45,12 @@ const SignUp: FC = () => {
       </Heading>
       <form onSubmit={onSubmit}>
         <Stack spacing={4} mt={5}>
+          {message && (
+            <Alert status="success">
+              <AlertIcon />
+              {message}
+            </Alert>
+          )}
           <AuthInput
             onChange={onChange}
             placeholder="Username"
@@ -57,7 +63,6 @@ const SignUp: FC = () => {
             name="email"
             error={error}
           />
-
           <AuthInput
             onChange={onChange}
             placeholder="Password"

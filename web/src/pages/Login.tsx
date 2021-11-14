@@ -1,5 +1,5 @@
 import { Container, Heading, LinkBox, Stack, Text } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthInput from "../components/Auth/AuthInput";
@@ -7,13 +7,12 @@ import { login } from "../reducers/user";
 import { useAppDispatch, useAppSelector } from "../store";
 
 const Login: FC = () => {
-  const { error, loading } = useAppSelector(state => state.user);
+  const { error, loading, message } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const [loginValues, setLoginValues] = useState({
     usernameOrEmail: "",
     password: "",
   });
-
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(
@@ -35,6 +34,12 @@ const Login: FC = () => {
       </Heading>
       <form onSubmit={onSubmit}>
         <Stack spacing={4} mt={5}>
+          {message && (
+            <Alert status="success">
+              <AlertIcon />
+              {message}
+            </Alert>
+          )}
           <AuthInput
             onChange={onChange}
             placeholder="Username Or Email"

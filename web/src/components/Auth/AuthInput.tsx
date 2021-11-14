@@ -20,6 +20,12 @@ const AuthInput: FC<InputProps> = ({
 }) => {
   return (
     <>
+      {error?.message && error.field === name && (
+        <Alert status="error">
+          <AlertIcon />
+          {error?.message}
+        </Alert>
+      )}
       <InputGroup>
         <Input
           onChange={onChange}
@@ -29,12 +35,6 @@ const AuthInput: FC<InputProps> = ({
           isInvalid={error && error?.field === name ? true : false}
         />
       </InputGroup>
-      {error?.message && error.field === name && (
-        <Alert status="error">
-          <AlertIcon />
-          {error?.message}
-        </Alert>
-      )}
     </>
   );
 };

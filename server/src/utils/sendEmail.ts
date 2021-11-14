@@ -3,12 +3,10 @@ import { createTransport, getTestMessageUrl } from "nodemailer";
 export const sendEmail = async (to: string, html: string) => {
   try {
     const transporter = createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
+      service: "gmail",
       auth: {
-        user: "lbmfxdlsorpq7kui@ethereal.email",
-        pass: "NWhxUr6Q6TNwAbpu8V",
+        user: "alphazero25811@gmail.com",
+        pass: process.env.GOOGLE_ACCOUNT_PASSWORD!,
       },
     });
     const info = await transporter.sendMail({

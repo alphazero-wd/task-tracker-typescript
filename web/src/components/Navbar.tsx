@@ -19,17 +19,21 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FC, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
-import { logout } from "../reducers/user";
+import { clearMessage, logout } from "../reducers/user";
 
 const Navbar: FC = () => {
   const { user } = useAppSelector(state => state.user);
+  const location = useLocation();
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (user) localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [location]);
   return (
     <Box bg="blue.500" p={4}>
       <Container maxW="1200px">

@@ -10,9 +10,10 @@ export const isAuth: ControllerFn = (req, _res, next) => {
       return next(new ErrorResponse("You are not authorized.", 401));
 
     const token = authHeaders.split(" ")[1];
-
-    const payload = verify(token, process.env.JWT_ACCESS_TOKEN_KEY!);
-    req.payload = payload as any;
+    if (token) {
+      const payload = verify(token, process.env.JWT_ACCESS_TOKEN_KEY!);
+      req.payload = payload as any;
+    } else return next(new ErrorResponse("You are not authorized", 403));
     next();
   } catch (error) {
     return next(new ErrorResponse(error.message));
