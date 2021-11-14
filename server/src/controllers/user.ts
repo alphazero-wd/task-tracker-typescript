@@ -1,38 +1,38 @@
-import { ControllerFn } from "../utils/types";
+import { ControllerFn } from '../utils/types';
 import {
   validateEmail,
   validatePasswordStrength,
   validateUsername,
-} from "../utils/validation";
-import { createAccessToken, createRefreshToken } from "../utils/token";
-import { User } from "../models/User";
-import { compare, hash } from "bcryptjs";
-import { ErrorResponse } from "../utils/ErrorResponse";
-import { sendEmail } from "../utils/sendEmail";
-import { __prod__ } from "../utils/constants";
-import { verify } from "jsonwebtoken";
+} from '../utils/validation';
+import { createAccessToken, createRefreshToken } from '../utils/token';
+import { User } from '../models/User';
+import { compare, hash } from 'bcryptjs';
+import { ErrorResponse } from '../utils/ErrorResponse';
+import { sendEmail } from '../utils/sendEmail';
+import { __prod__ } from '../utils/constants';
+import { verify } from 'jsonwebtoken';
 export const signup: ControllerFn = async (req, res, next) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
     const user = await User.findOne({ where: [{ username }, { email }] });
     const usernameError = validateUsername(username);
     if (usernameError)
-      return next(new ErrorResponse(usernameError, 400, "username"));
+      return next(new ErrorResponse(usernameError, 400, 'username'));
 
     if (user)
       return next(
-        new ErrorResponse("Username Already Exists", 400, "username")
+        new ErrorResponse('Username Already Exists', 400, 'username')
       );
 
     if (!validateEmail(email))
-      return next(new ErrorResponse("Invalid Email", 400, "email"));
+      return next(new ErrorResponse('Invalid Email', 400, 'email'));
 
     if (!validatePasswordStrength(password))
-      return next(new ErrorResponse("Too Weak Password.", 400, "password"));
+      return next(new ErrorResponse('Too Weak Password.', 400, 'password'));
 
     if (password !== confirmPassword)
       return next(
-        new ErrorResponse("Passwords Don't Match.", 400, "confirmPassword")
+        new ErrorResponse("Passwords Don't Match.", 400, 'confirmPassword')
       );
 
     const newUser = await User.create({
@@ -41,11 +41,11 @@ export const signup: ControllerFn = async (req, res, next) => {
       password: await hash(password, 12),
     }).save();
 
-    res.cookie("jid", createRefreshToken(newUser), { httpOnly: true });
+    res.cookie('jid', createRefreshToken(newUser), { httpOnly: true });
 
     return res.status(201).json({
       success: true,
-      message: "Sign Up Successfully.",
+      message: 'Sign Up Successfully.',
       user: {
         email: newUser.email,
         username: newUser.username,
@@ -62,7 +62,7 @@ export const login: ControllerFn = async (req, res, next) => {
     const { usernameOrEmail, password } = req.body;
     let user: User | undefined;
 
-    if (!usernameOrEmail.includes("@")) {
+    if (!usernameOrEmail.includes('@')) {
       user = await User.findOne({ where: { username: usernameOrEmail } });
     } else {
       user = await User.findOne({ where: { email: usernameOrEmail } });
@@ -70,20 +70,20 @@ export const login: ControllerFn = async (req, res, next) => {
 
     if (!user)
       return next(
-        new ErrorResponse("User Doesn't Exist.", 404, "usernameOrEmail")
+        new ErrorResponse("User Doesn't Exist.", 404, 'usernameOrEmail')
       );
 
     const isValidPassword = await compare(password, user.password);
     if (!isValidPassword)
-      return next(new ErrorResponse("Wrong Password.", 400, "password"));
+      return next(new ErrorResponse('Wrong Password.', 400, 'password'));
 
-    res.cookie("jid", createRefreshToken(user), { httpOnly: true });
+    res.cookie('jid', createRefreshToken(user), { httpOnly: true });
 
     const token = createAccessToken(user);
 
     return res.status(200).json({
       success: true,
-      message: "Login Successfully.",
+      message: 'Login Successfully.',
       user: {
         username: user.username,
         email: user.email,
@@ -114,10 +114,10 @@ export const forgotPassword: ControllerFn = async (req, res, next) => {
   try {
     const { email } = req.body;
     if (!validateEmail(email))
-      return next(new ErrorResponse("Invalid Email.", 400, "email"));
+      return next(new ErrorResponse('Invalid Email.', 400, 'email'));
     const user = await User.findOne({ where: { email } });
     if (!user)
-      return next(new ErrorResponse("User Doesn't Exist.", 404, "email"));
+      return next(new ErrorResponse("User Doesn't Exist.", 404, 'email'));
     const refreshToken = createRefreshToken(user);
     sendEmail(
       email,
@@ -129,7 +129,7 @@ export const forgotPassword: ControllerFn = async (req, res, next) => {
           ? `https://mern-task-tracker.netlify.app/reset-password/${refreshToken}`
           : `http://localhost:3000/reset-password/${refreshToken}`
       }>
-     Reset Password</a> 
+     Reset Password</a>
     `
     );
     return res.send(`Verification Message Has Been Sent to: ${email}`);
@@ -143,7 +143,7 @@ export const resetPassword: ControllerFn = async (req, res, next) => {
     const { token } = req.params;
     const { password, confirmPassword } = req.body;
 
-    if (!token) return next(new ErrorResponse("No Token Provided.", 401));
+    if (!token) return next(new ErrorResponse('No Token Provided.', 401));
 
     const payload = verify(token, process.env.JWT_REFRESH_TOKEN_KEY!);
     req.payload = payload as any;
@@ -158,17 +158,18 @@ export const resetPassword: ControllerFn = async (req, res, next) => {
       );
 
     if (!validatePasswordStrength(password))
-      return next(new ErrorResponse("Too Weak Password", 400, "password"));
+      return next(new ErrorResponse('Too Weak Password', 400, 'password'));
 
     if (password !== confirmPassword)
       return next(
-        new ErrorResponse("Passwords Don't Match.", 400, "confirmPassword")
+        new ErrorResponse("Passwords Don't Match.", 400, 'confirmPassword')
       );
-    await User.update(req.payload!.userId, { password });
+    const hashedPassword = await hash(password, 12);
+    await User.update(req.payload!.userId, { password: hashedPassword });
 
     return res.status(200).json({
       success: true,
-      message: "Password Updated.",
+      message: 'Password Updated.',
       user: {
         username: user.username,
         email: user.email,

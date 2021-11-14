@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as api from "../api";
-import { User } from "../utils/types";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import * as api from '../api';
+import { User } from '../utils/types';
 
 interface UserState {
   user: null | User;
@@ -15,7 +15,7 @@ interface ValidationError {
 }
 
 export const signUp = createAsyncThunk(
-  "user/signUp",
+  'user/signUp',
   async (formValue: api.SignUp, { rejectWithValue }) => {
     try {
       const { data } = await api.signUp(formValue);
@@ -27,7 +27,7 @@ export const signUp = createAsyncThunk(
 );
 
 export const login = createAsyncThunk(
-  "user/login",
+  'user/login',
   async (formValue: api.Login, { rejectWithValue }) => {
     try {
       const { data } = await api.login(formValue);
@@ -39,7 +39,7 @@ export const login = createAsyncThunk(
 );
 
 export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
+  'user/forgotPassword',
   async (email: string, { rejectWithValue }) => {
     try {
       const { data } = await api.forgotPassword(email);
@@ -50,7 +50,7 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 export const resetPassword = createAsyncThunk(
-  "user/resetPassword",
+  'user/resetPassword',
   async (resetValues: api.ResetValues, { rejectWithValue }) => {
     try {
       const { data } = await api.resetPassword(resetValues);
@@ -64,26 +64,26 @@ export const resetPassword = createAsyncThunk(
 const initialState: UserState = {
   error: null,
   loading: false,
-  user: JSON.parse(localStorage.getItem("user") as any),
-  message: "",
+  user: JSON.parse(localStorage.getItem('user') as any),
+  message: '',
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
-    logout: state => {
+    logout: (state) => {
       localStorage.clear();
       state.user = null;
     },
-    clearMessage: state => {
-      state.message = "";
+    clearMessage: (state) => {
+      state.message = '';
       state.error = null;
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(signUp.pending, state => {
+      .addCase(signUp.pending, (state) => {
         state.loading = true;
       })
       .addCase(signUp.fulfilled, (state, action) => {
@@ -98,7 +98,7 @@ const userSlice = createSlice({
       });
 
     builder
-      .addCase(login.pending, state => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
@@ -112,7 +112,7 @@ const userSlice = createSlice({
         state.loading = false;
       });
     builder
-      .addCase(forgotPassword.pending, state => {
+      .addCase(forgotPassword.pending, (state) => {
         state.loading = true;
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
@@ -125,7 +125,7 @@ const userSlice = createSlice({
         state.loading = false;
       });
     builder
-      .addCase(resetPassword.pending, state => {
+      .addCase(resetPassword.pending, (state) => {
         state.loading = true;
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
