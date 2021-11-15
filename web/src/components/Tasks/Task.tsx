@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
 import {
   Tr,
   Td,
@@ -7,10 +7,10 @@ import {
   Tooltip,
   Checkbox,
   Text,
-} from "@chakra-ui/react";
-import { FC } from "react";
-import { Task as TaskProps } from "../../utils/types";
-import moment from "moment";
+} from '@chakra-ui/react';
+import { FC } from 'react';
+import { Task as TaskProps } from '../../utils/types';
+import moment from 'moment';
 const Task: FC<TaskProps> = ({
   taskId,
   taskName,
@@ -20,8 +20,8 @@ const Task: FC<TaskProps> = ({
 }) => {
   return (
     <Tr
-      bg={`${isImportant ? "blue.100" : "white"}`}
-      color={`${isImportant ? "blue" : "black"}`}
+      bg={`${isImportant ? 'blue.100' : 'white'}`}
+      color={`${isImportant ? 'blue' : 'black'}`}
     >
       <Td>
         <Stack direction="row" spacing={4}>
@@ -31,8 +31,8 @@ const Task: FC<TaskProps> = ({
           <Text>{taskName}</Text>
         </Stack>
       </Td>
-      <Td display={["none", "none", "table-cell"]}>
-        {moment(createdAt).format("DD MMM, YYYY")}
+      <Td display={['none', 'none', 'table-cell']}>
+        {moment(createdAt).format('DD MMM, YYYY')}
       </Td>
       <Td>
         <Stack direction="row" justifyContent="flex-end" spacing={[3, 4]}>

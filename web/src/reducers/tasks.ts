@@ -1,18 +1,23 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Task } from "../utils/types";
-import * as api from "../api";
-export const getTasks = createAsyncThunk("tasks/getTasks", async () => {
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { Task } from '../utils/types';
+import * as api from '../api';
+
+interface TasksState {
+  tasks: Task[];
+  displayedTasks: Task[];
+  loading: boolean;
+}
+export const getTasks = createAsyncThunk('tasks/getTasks', async () => {
   try {
     const { data } = await api.getTasks();
-    console.log(data);
     return data.data;
   } catch (error) {
     console.log(error);
   }
 });
 export const addTask = createAsyncThunk(
-  "tasks/addTask",
-  async (task: Omit<Task, "taskId">) => {
+  'tasks/addTask',
+  async (task: Omit<Task, 'taskId'>) => {
     try {
       const { data } = await api.addTask(task);
       return data.data;
@@ -21,12 +26,17 @@ export const addTask = createAsyncThunk(
     }
   }
 );
-
-interface TasksState {
-  tasks: Task[];
-  displayedTasks: Task[];
-  loading: boolean;
-}
+export const deleteTask = createAsyncThunk(
+  'tasks/deleteTask',
+  async (taskId: number | string) => {
+    try {
+      await api.deleteTask(taskId);
+      return taskId;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 const initialState: TasksState = {
   tasks: [],
   displayedTasks: [],
@@ -34,26 +44,26 @@ const initialState: TasksState = {
 };
 
 const tasksSlice = createSlice({
-  name: "tasks",
+  name: 'tasks',
   initialState,
   reducers: {
     queryTasks: (state, action) => {
       let results = [...state.tasks];
-      results = results.filter(task =>
+      results = results.filter((task) =>
         task.taskName
           .toLowerCase()
           .includes(action.payload.search.toLowerCase())
       );
       if (action.payload.filterBy) {
         switch (action.payload.filterBy) {
-          case "importantTasks":
-            results = results.filter(task => task.isImportant);
+          case 'importantTasks':
+            results = results.filter((task) => task.isImportant);
             break;
-          case "completedTasks":
-            results = results.filter(task => task.isCompleted);
+          case 'completedTasks':
+            results = results.filter((task) => task.isCompleted);
             break;
-          case "incompletedTasks":
-            results = results.filter(task => !task.isCompleted);
+          case 'incompletedTasks':
+            results = results.filter((task) => !task.isCompleted);
             break;
           default:
             break;
@@ -61,17 +71,17 @@ const tasksSlice = createSlice({
       }
       if (action.payload.sortBy) {
         switch (action.payload.sortBy) {
-          case "a-z":
+          case 'a-z':
             results = results.sort((a, b) =>
               a.taskName < b.taskName ? -1 : 1
             );
             break;
-          case "z-a":
+          case 'z-a':
             results = results.sort((a, b) =>
               a.taskName < b.taskName ? -1 : 1
             );
             break;
-          case "latest":
+          case 'latest':
             results = results.sort((a, b) =>
               new Date(a.createdAt as any).getTime() -
               new Date(b.createdAt as any).getTime()
@@ -79,7 +89,7 @@ const tasksSlice = createSlice({
                 : 1
             );
             break;
-          case "oldest":
+          case 'oldest':
             results = results.sort((a, b) =>
               new Date(a.createdAt as any).getTime() -
               new Date(b.createdAt as any).getTime()
@@ -94,9 +104,9 @@ const tasksSlice = createSlice({
       state.displayedTasks = results;
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(getTasks.pending, state => {
+      .addCase(getTasks.pending, (state) => {
         state.loading = true;
       })
       .addCase(getTasks.fulfilled, (state, action) => {
@@ -105,6 +115,11 @@ const tasksSlice = createSlice({
       });
     builder.addCase(addTask.fulfilled, (state, action) => {
       state.tasks.push(action.payload);
+    });
+    builder.addCase(deleteTask.fulfilled, (state, action) => {
+      state.tasks = state.tasks.filter(
+        (task) => task.taskId !== action.payload
+      );
     });
   },
 });
