@@ -1,8 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import user from './reducers/user';
+import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import user from "./reducers/user";
+import tasks from "./reducers/tasks";
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, tasks },
 });
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

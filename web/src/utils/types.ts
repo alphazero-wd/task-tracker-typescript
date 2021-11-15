@@ -1,9 +1,9 @@
 export interface Task {
   taskId: string | number;
   taskName: string;
-  isImportant: boolean;
-  isCompleted: boolean;
-  createdAt: Date;
+  isImportant?: boolean;
+  isCompleted?: boolean;
+  createdAt?: Date;
   updatedAt?: Date;
 }
 export interface User {

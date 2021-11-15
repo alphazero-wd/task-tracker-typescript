@@ -20,20 +20,26 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
 import { clearMessage, logout } from "../reducers/user";
+import { queryTasks } from "../reducers/tasks";
 
 const Navbar: FC = () => {
   const { user } = useAppSelector(state => state.user);
-  const location = useLocation();
+  const { tasks } = useAppSelector(state => state.tasks);
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const [search, setSearch] = useState("");
   useEffect(() => {
     if (user) localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
   useEffect(() => {
     dispatch(clearMessage());
-  }, [location]);
+  }, [location, dispatch]);
+  useEffect(() => {
+    dispatch(queryTasks({ search }));
+  }, [dispatch, search, tasks]);
   return (
     <Box bg="blue.500" p={4}>
       <Container maxW="1200px">
@@ -52,6 +58,7 @@ const Navbar: FC = () => {
                   type="text"
                   placeholder="Search Tasks"
                   focusBorderColor="white"
+                  onChange={e => setSearch(e.target.value)}
                 />
               </InputGroup>
               <Menu>
