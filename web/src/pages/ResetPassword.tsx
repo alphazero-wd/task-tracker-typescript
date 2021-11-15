@@ -1,5 +1,11 @@
 import { Button } from "@chakra-ui/button";
-import { Container, Heading, Stack } from "@chakra-ui/layout";
+import {
+  Container,
+  Heading,
+  Stack,
+  UnorderedList,
+  ListItem,
+} from "@chakra-ui/layout";
 import { Alert, AlertIcon } from "@chakra-ui/alert";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -50,6 +56,15 @@ const ResetPassword: FC = () => {
             type="password"
             error={error}
           />
+          <UnorderedList>
+            <ListItem>Password should be above 6 characters.</ListItem>
+            <ListItem>
+              Password should contain one lowercase and one uppercase letter.
+            </ListItem>
+            <ListItem>
+              Password should contain a number and a special character.
+            </ListItem>
+          </UnorderedList>
           <AuthInput
             placeholder="Confirm New Password"
             name="confirmPassword"

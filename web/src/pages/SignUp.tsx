@@ -1,4 +1,11 @@
-import { Container, Heading, LinkBox, Text } from "@chakra-ui/layout";
+import {
+  Container,
+  Heading,
+  LinkBox,
+  UnorderedList,
+  Text,
+  ListItem,
+} from "@chakra-ui/layout";
 import { Alert, AlertIcon, Button, Stack } from "@chakra-ui/react";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
@@ -70,6 +77,15 @@ const SignUp: FC = () => {
             type="password"
             error={error}
           />
+          <UnorderedList>
+            <ListItem>Password should be above 6 characters.</ListItem>
+            <ListItem>
+              Password should contain one lowercase and one uppercase letter.
+            </ListItem>
+            <ListItem>
+              Password should contain a number and a special character.
+            </ListItem>
+          </UnorderedList>
           <AuthInput
             placeholder="Confirm Password"
             onChange={onChange}
