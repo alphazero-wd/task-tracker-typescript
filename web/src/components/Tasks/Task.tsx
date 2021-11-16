@@ -11,6 +11,8 @@ import {
 import { FC } from 'react';
 import { Task as TaskProps } from '../../utils/types';
 import moment from 'moment';
+import { useAppDispatch } from '../../store';
+import { deleteTask, updateTask } from '../../reducers/tasks';
 const Task: FC<TaskProps> = ({
   taskId,
   taskName,
@@ -18,15 +20,23 @@ const Task: FC<TaskProps> = ({
   isImportant,
   createdAt,
 }) => {
+  const dispatch = useAppDispatch();
   return (
     <Tr
       bg={`${isImportant ? 'blue.100' : 'white'}`}
-      color={`${isImportant ? 'blue' : 'black'}`}
+      color={`${isImportant ? 'blue' : 'gray.800'}`}
     >
       <Td>
         <Stack direction="row" spacing={4}>
           <Tooltip hasArrow placement="top" label="Mark as Complete">
-            <Checkbox isChecked={isCompleted} colorScheme="green" size="lg" />
+            <Checkbox
+              onChange={() =>
+                dispatch(updateTask({ isCompleted: !isCompleted, taskId }))
+              }
+              isChecked={isCompleted}
+              colorScheme="green"
+              size="lg"
+            />
           </Tooltip>
           <Text>{taskName}</Text>
         </Stack>
@@ -41,6 +51,9 @@ const Task: FC<TaskProps> = ({
               aria-label="Toggle Important"
               icon={<StarIcon />}
               variant="ghost"
+              onClick={() =>
+                dispatch(updateTask({ isImportant: !isImportant, taskId }))
+              }
             />
           </Tooltip>
           <Tooltip hasArrow placement="top" label="Edit Task">
@@ -52,6 +65,7 @@ const Task: FC<TaskProps> = ({
           </Tooltip>
           <Tooltip hasArrow placement="top" label="Delete Task">
             <IconButton
+              onClick={() => dispatch(deleteTask(taskId))}
               aria-label="Delete Task"
               icon={<DeleteIcon />}
               variant="ghost"

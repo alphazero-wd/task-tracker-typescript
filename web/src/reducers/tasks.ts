@@ -17,7 +17,7 @@ export const getTasks = createAsyncThunk('tasks/getTasks', async () => {
 });
 export const addTask = createAsyncThunk(
   'tasks/addTask',
-  async (task: Omit<Task, 'taskId'>) => {
+  async (task: Pick<Task, 'taskName'>) => {
     try {
       const { data } = await api.addTask(task);
       return data.data;
@@ -37,6 +37,17 @@ export const deleteTask = createAsyncThunk(
     }
   }
 );
+export const updateTask = createAsyncThunk(
+  'tasks/updatedTask',
+  async (task: Partial<Task>) => {
+    try {
+      const { data } = await api.updateTask(task);
+      return data.data;
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  }
+);
 const initialState: TasksState = {
   tasks: [],
   displayedTasks: [],
@@ -49,11 +60,13 @@ const tasksSlice = createSlice({
   reducers: {
     queryTasks: (state, action) => {
       let results = [...state.tasks];
-      results = results.filter((task) =>
-        task.taskName
-          .toLowerCase()
-          .includes(action.payload.search.toLowerCase())
-      );
+      if (action.payload.search) {
+        results = results.filter((task) =>
+          task.taskName
+            .toLowerCase()
+            .includes(action.payload.search.toLowerCase())
+        );
+      }
       if (action.payload.filterBy) {
         switch (action.payload.filterBy) {
           case 'importantTasks':
@@ -73,12 +86,12 @@ const tasksSlice = createSlice({
         switch (action.payload.sortBy) {
           case 'a-z':
             results = results.sort((a, b) =>
-              a.taskName < b.taskName ? -1 : 1
+              a.taskName < b.taskName ? -1 : 0
             );
             break;
           case 'z-a':
             results = results.sort((a, b) =>
-              a.taskName < b.taskName ? -1 : 1
+              a.taskName < b.taskName ? 1 : -1
             );
             break;
           case 'latest':
@@ -120,6 +133,14 @@ const tasksSlice = createSlice({
       state.tasks = state.tasks.filter(
         (task) => task.taskId !== action.payload
       );
+    });
+    builder.addCase(updateTask.fulfilled, (state, action) => {
+      const task = state.tasks.find(
+        (task) => task.taskId === action.payload.taskId
+      );
+      task!.isCompleted = action.payload.isCompleted;
+      task!.isImportant = action.payload.isImportant;
+      task!.taskName = action.payload.taskName;
     });
   },
 });
