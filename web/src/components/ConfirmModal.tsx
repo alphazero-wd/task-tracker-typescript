@@ -1,6 +1,6 @@
-import { FormLabel } from "@chakra-ui/form-control";
-import { Input, Button } from "@chakra-ui/react";
-import { Stack, Text } from "@chakra-ui/layout";
+import { FormLabel } from '@chakra-ui/form-control';
+import { Input, Button } from '@chakra-ui/react';
+import { Stack, Text } from '@chakra-ui/layout';
 import {
   Modal,
   ModalContent,
@@ -9,23 +9,22 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-} from "@chakra-ui/modal";
-import { FC, FormEvent, useState } from "react";
-import { useAppDispatch } from "../store";
-import { deleteUser, logout } from "../reducers/user";
+} from '@chakra-ui/modal';
+import { FC, FormEvent, useState } from 'react';
+import { useAppDispatch } from '../store';
+import { deleteUser } from '../reducers/user';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   confirmationMessage: string;
 }
 const ConfirmModal: FC<Props> = ({ isOpen, onClose, confirmationMessage }) => {
-  const [confirmValue, setConfirmValue] = useState("");
+  const [confirmValue, setConfirmValue] = useState('');
   const dispatch = useAppDispatch();
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(deleteUser());
-    dispatch(logout());
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -45,7 +44,7 @@ const ConfirmModal: FC<Props> = ({ isOpen, onClose, confirmationMessage }) => {
               </FormLabel>
               <Input
                 value={confirmValue}
-                onChange={e => setConfirmValue(e.target.value)}
+                onChange={(e) => setConfirmValue(e.target.value)}
                 placeholder={`Type "${confirmationMessage}" here...`}
               />
             </Stack>
