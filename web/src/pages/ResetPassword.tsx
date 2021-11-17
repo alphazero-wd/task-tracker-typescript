@@ -55,6 +55,7 @@ const ResetPassword: FC = () => {
             onChange={onChange}
             type="password"
             error={error}
+            value={resetValues.password}
           />
           <UnorderedList>
             <ListItem>Password should be above 6 characters.</ListItem>
@@ -71,6 +72,7 @@ const ResetPassword: FC = () => {
             onChange={onChange}
             type="password"
             error={error}
+            value={resetValues.confirmPassword}
           />
           <Button
             colorScheme="blue"

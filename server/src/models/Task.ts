@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { User } from "./User";
 
@@ -29,6 +30,10 @@ export class Task extends BaseEntity {
   @Column({ default: false })
   isImportant: boolean;
 
-  @ManyToOne(() => User, user => user.userId, { cascade: true })
-  userId!: number;
+  @ManyToOne(() => User, user => user.userId, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn()
+  userId: number;
 }

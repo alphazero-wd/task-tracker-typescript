@@ -93,14 +93,18 @@ export const login: ControllerFn = async (req, res, next) => {
 
 export const deleteUser: ControllerFn = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const user = await User.findOne(parseInt(id));
-    if (!user) return next(new ErrorResponse(`No User Found With ID: ${id}`));
+    const user = await User.findOne(req.payload?.userId);
+    if (!user)
+      return next(
+        new ErrorResponse(
+          `User with the ID: ${req.payload?.userId} doesn't exist.`
+        )
+      );
 
-    await User.delete(id);
+    await User.delete(req.payload!.userId);
     return res.status(200).json({
       success: true,
-      message: `User With the ID: ${id} Has Been Deleted.`,
+      message: `User ${user.username} has been deleted.`,
     });
   } catch (error) {
     return next(new ErrorResponse(error.message));
@@ -172,6 +176,65 @@ export const resetPassword: ControllerFn = async (req, res, next) => {
         token: createAccessToken(user),
       },
     });
+  } catch (error) {
+    return next(new ErrorResponse(error.message));
+  }
+};
+
+export const updateUserProfile: ControllerFn = async (req, res, next) => {
+  try {
+    const { username, email, password, newPassword, confirmNewPassword } =
+      req.body;
+    const user = await User.findOne(req.payload!.userId);
+    if (user) {
+      if (username) {
+        const isInvalidUsername = validateUsername(username);
+        if (isInvalidUsername)
+          return next(new ErrorResponse(isInvalidUsername, 400, "username"));
+        const existingUser = await User.findOne({ where: { username } });
+        if (existingUser || username === user?.username)
+          return next(
+            new ErrorResponse("Username Already Exists.", 400, "username")
+          );
+      }
+      if (email)
+        return next(
+          new ErrorResponse("Email Cannot Be Changed.", 400, "email")
+        );
+
+      if (password) {
+        const isValidPassword = await compare(password, user!.password);
+        if (!isValidPassword)
+          return next(new ErrorResponse("Wrong Password.", 400, "password"));
+        if (newPassword !== confirmNewPassword)
+          return next(
+            new ErrorResponse(
+              "Passwords Don't Match.",
+              400,
+              "confirmNewPassword"
+            )
+          );
+        if (!validatePasswordStrength(newPassword))
+          return next(new ErrorResponse("Too Weak Password.", 400, "password"));
+      }
+      await User.merge(user, { username, password: newPassword }).save();
+      return res.status(200).json({
+        success: true,
+        message: "Profile Updated.",
+        user: {
+          username: user?.username,
+          email: user?.email,
+          token: createAccessToken(user),
+        },
+      });
+    } else {
+      return next(
+        new ErrorResponse(
+          `No User Found With the ID: ${req.payload?.userId}`,
+          404
+        )
+      );
+    }
   } catch (error) {
     return next(new ErrorResponse(error.message));
   }

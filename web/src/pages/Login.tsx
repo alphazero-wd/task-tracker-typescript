@@ -45,6 +45,7 @@ const Login: FC = () => {
             placeholder="Username Or Email"
             name="usernameOrEmail"
             error={error}
+            value={loginValues.usernameOrEmail}
           />
 
           <AuthInput
@@ -53,6 +54,7 @@ const Login: FC = () => {
             name="password"
             type="password"
             error={error}
+            value={loginValues.password}
           />
 
           <LinkBox as={Link} color="blue.500" to="/forgot-password">
