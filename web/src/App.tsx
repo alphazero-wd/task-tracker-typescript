@@ -8,6 +8,8 @@ import ResetPassword from './pages/ResetPassword';
 import SignUp from './pages/SignUp';
 import { useAppSelector } from './store';
 import Profile from './pages/Profile';
+import ErrorPage from './pages/ErrorPage';
+import Home from './pages/Home';
 function App() {
   const { user } = useAppSelector((state) => state.user);
   return (
@@ -16,6 +18,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route
             path="/tasks"
             element={user ? <TasksPage /> : <Navigate to="/login" />}
@@ -40,6 +43,7 @@ function App() {
             path="/profile"
             element={user ? <Profile /> : <Navigate to="/login" />}
           />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
