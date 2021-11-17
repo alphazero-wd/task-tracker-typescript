@@ -13,9 +13,11 @@ import {
   Checkbox,
   DrawerFooter,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import { useAppSelector, useAppDispatch } from "../store";
 import { updateTask } from "../reducers/tasks";
+import moment from "moment";
 interface Props {
   onClose: () => void;
   isOpen: boolean;
@@ -27,6 +29,10 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
     isImportant: false,
     isCompleted: false,
   });
+  const [taskDate, setTaskDate] = useState({
+    createdAt: "",
+    updatedAt: "",
+  });
   const { tasks } = useAppSelector(state => state.tasks);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -37,6 +43,10 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
           taskName: task!.taskName,
           isCompleted: task!.isCompleted,
           isImportant: task!.isImportant,
+        });
+        setTaskDate({
+          createdAt: moment(task.createdAt).format("MMMM Do YYYY, h:mm a"),
+          updatedAt: moment(task.updatedAt).format(" MMMM Do YYYY, h:mm a"),
         });
       }
     }
@@ -90,7 +100,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
                   name="isImportant"
                   mr={3}
                 />
-                <FormLabel>Mark as important:</FormLabel>
+                <FormLabel>Mark as important</FormLabel>
               </Box>
               <Box display="flex" alignItems="center">
                 <Checkbox
@@ -99,7 +109,11 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
                   onChange={onChange}
                   mr={3}
                 />
-                <FormLabel>Mark as completed: </FormLabel>
+                <FormLabel>Mark as completed</FormLabel>
+              </Box>
+              <Box>
+                <Text mb={3}>Created At: {taskDate.createdAt}</Text>
+                <Text>Updated At: {taskDate.updatedAt}</Text>
               </Box>
             </Stack>
           </DrawerBody>

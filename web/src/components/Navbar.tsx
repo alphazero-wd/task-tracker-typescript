@@ -54,7 +54,12 @@ const Navbar: FC = () => {
     <Box bg="blue.500" p={4}>
       <Container maxW="1200px">
         <Flex justifyContent="space-between" alignItems="center">
-          <LinkBox fontSize="xl" to="/" color="white">
+          <LinkBox
+            as={Link}
+            fontSize="xl"
+            to={user ? "/tasks" : "/"}
+            color="white"
+          >
             To Do
           </LinkBox>
           {user && (
@@ -81,8 +86,8 @@ const Navbar: FC = () => {
                 </MenuButton>
                 <MenuList>
                   <MenuGroup title={user?.username}>
-                    <MenuItem icon={<SettingsIcon />}>
-                      <Link to="/account">Your Account</Link>
+                    <MenuItem as={Link} to="/profile" icon={<SettingsIcon />}>
+                      Your Profile
                     </MenuItem>
                     <MenuItem
                       onClick={() => dispatch(logout())}

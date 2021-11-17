@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import SignUp from "./pages/SignUp";
 import { useAppSelector } from "./store";
+import Profile from "./pages/Profile";
 function App() {
   const { user } = useAppSelector(state => state.user);
   return (
@@ -17,7 +18,7 @@ function App() {
         <Routes>
           <Route
             path="/tasks"
-            element={user ? <TasksPage /> : <Navigate to="/signup" />}
+            element={user ? <TasksPage /> : <Navigate to="/login" />}
           />
           <Route
             path="/signup"
@@ -34,6 +35,10 @@ function App() {
           <Route
             path="/reset-password/:token"
             element={user ? <Navigate to="/tasks" /> : <ResetPassword />}
+          />
+          <Route
+            path="/profile"
+            element={user ? <Profile /> : <Navigate to="/login" />}
           />
         </Routes>
       </BrowserRouter>

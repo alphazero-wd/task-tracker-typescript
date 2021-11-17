@@ -10,6 +10,7 @@ interface InputProps {
     field?: string;
     message?: string;
   } | null;
+  value: string;
 }
 const AuthInput: FC<InputProps> = ({
   onChange,
@@ -17,6 +18,7 @@ const AuthInput: FC<InputProps> = ({
   name,
   type,
   error,
+  value,
 }) => {
   return (
     <>
@@ -33,6 +35,7 @@ const AuthInput: FC<InputProps> = ({
           name={name}
           type={type || "text"}
           isInvalid={error && error?.field === name ? true : false}
+          value={value}
         />
       </InputGroup>
     </>

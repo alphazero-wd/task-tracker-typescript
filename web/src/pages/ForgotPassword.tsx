@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useState } from "react";
 import {
   Alert,
   AlertIcon,
@@ -7,13 +7,13 @@ import {
   Heading,
   Stack,
   Text,
-} from '@chakra-ui/react';
-import AuthInput from '../components/Auth/AuthInput';
-import { useAppDispatch, useAppSelector } from '../store';
-import { forgotPassword } from '../reducers/user';
+} from "@chakra-ui/react";
+import AuthInput from "../components/Auth/AuthInput";
+import { useAppDispatch, useAppSelector } from "../store";
+import { forgotPassword } from "../reducers/user";
 const ForgotPassword: FC = () => {
-  const [email, setEmail] = useState('');
-  const { message, error } = useAppSelector((state) => state.user);
+  const [email, setEmail] = useState("");
+  const { message, error } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,9 +39,10 @@ const ForgotPassword: FC = () => {
           )}
           <AuthInput
             name="email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             placeholder="Email Address"
             error={error}
+            value={email}
           />
           <Button type="submit" colorScheme="blue" isDisabled={!email}>
             Send
