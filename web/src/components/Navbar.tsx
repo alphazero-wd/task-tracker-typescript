@@ -3,6 +3,8 @@ import {
   ChevronDownIcon,
   SettingsIcon,
   ArrowForwardIcon,
+  SunIcon,
+  MoonIcon,
 } from "@chakra-ui/icons";
 import {
   Box,
@@ -14,11 +16,13 @@ import {
   InputLeftElement,
   LinkBox,
   Menu,
+  IconButton,
   MenuButton,
   MenuGroup,
   MenuItem,
   MenuList,
   Stack,
+  useColorMode,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import { FC, useEffect, ChangeEvent } from "react";
@@ -31,6 +35,7 @@ interface Props {
 }
 
 const Navbar: FC<Props> = ({ onChange }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
   const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -51,17 +56,24 @@ const Navbar: FC<Props> = ({ onChange }) => {
   }, [location, dispatch]);
 
   return (
-    <Box bg="blue.500" p={4}>
+    <Box bg={colorMode === "light" ? "white" : "gray.700"} p={4}>
       <Container maxW="1200px">
         <Flex justifyContent="space-between" alignItems="center">
           <LinkBox
             as={Link}
             fontSize="xl"
             to={user ? "/tasks" : "/"}
-            color="white"
+            color={colorMode === "light" ? "gray.900" : "white"}
+            fontWeight="bold"
           >
             To Do
           </LinkBox>
+          <IconButton
+            aria-label="Toggle Theme"
+            icon={colorMode === "light" ? <SunIcon /> : <MoonIcon />}
+            onClick={toggleColorMode}
+          />
+
           {user ? (
             <>
               <InputGroup w="75">
@@ -105,7 +117,12 @@ const Navbar: FC<Props> = ({ onChange }) => {
               <Button colorScheme="pink" as={Link} to="/login">
                 Login
               </Button>
-              <Button as={Link} to="/signup">
+              <Button
+                as={Link}
+                colorScheme="blue"
+                variant="outline"
+                to="/signup"
+              >
                 Sign Up
               </Button>
             </Stack>

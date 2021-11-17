@@ -12,6 +12,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import { ChangeEvent, useEffect, useState } from "react";
 import { queryTasks } from "./reducers/tasks";
+import theme from "./theme";
 function App() {
   const { user } = useAppSelector(state => state.user);
   const { tasks } = useAppSelector(state => state.tasks);
@@ -29,7 +30,7 @@ function App() {
   }, [queries, dispatch, tasks]);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <CSSReset />
       <BrowserRouter>
         <Navbar onChange={onChange} />
