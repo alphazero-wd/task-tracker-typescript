@@ -57,7 +57,7 @@ const ResetPassword: FC = () => {
             error={error}
             value={resetValues.password}
           />
-          <UnorderedList>
+          <UnorderedList px={5}>
             <ListItem>Password should be above 6 characters.</ListItem>
             <ListItem>
               Password should contain one lowercase and one uppercase letter.

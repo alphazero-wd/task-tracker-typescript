@@ -1,21 +1,12 @@
-import { Stack } from '@chakra-ui/layout';
-import { Select } from '@chakra-ui/select';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { queryTasks } from '../../reducers/tasks';
-import { useAppDispatch } from '../../store';
+import { Stack } from "@chakra-ui/layout";
+import { Select } from "@chakra-ui/select";
+import { ChangeEvent, FC } from "react";
 
-const Options: FC = () => {
-  const [queries, setQueries] = useState({
-    filterBy: '',
-    sortBy: '',
-  });
-  const dispatch = useAppDispatch();
-  const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setQueries({ ...queries, [e.target.name]: e.target.value });
-  };
-  useEffect(() => {
-    dispatch(queryTasks(queries));
-  }, [dispatch, queries]);
+interface Props {
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+}
+
+const Options: FC<Props> = ({ onChange }) => {
   return (
     <Stack
       mt={5}
@@ -25,7 +16,6 @@ const Options: FC = () => {
       spacing={4}
     >
       <Select
-        value={queries.filterBy}
         onChange={onChange}
         variant="flushed"
         placeholder="Filter By"
@@ -38,7 +28,6 @@ const Options: FC = () => {
       <Select
         variant="flushed"
         placeholder="Sort By"
-        value={queries.sortBy}
         name="sortBy"
         onChange={onChange}
       >

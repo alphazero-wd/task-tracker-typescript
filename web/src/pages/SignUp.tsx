@@ -80,7 +80,7 @@ const SignUp: FC = () => {
             error={error}
             value={signUpValues.password}
           />
-          <UnorderedList>
+          <UnorderedList px={5}>
             <ListItem>Password should be above 6 characters.</ListItem>
             <ListItem>
               Password should contain one lowercase and one uppercase letter.

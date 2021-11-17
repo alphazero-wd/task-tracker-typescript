@@ -18,19 +18,22 @@ import {
   MenuGroup,
   MenuItem,
   MenuList,
+  Stack,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, ChangeEvent } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
 import { clearMessage, logout } from "../reducers/user";
-import { queryTasks } from "../reducers/tasks";
 import jwtDecode from "jwt-decode";
-const Navbar: FC = () => {
+
+interface Props {
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+}
+
+const Navbar: FC<Props> = ({ onChange }) => {
   const { user } = useAppSelector(state => state.user);
-  const { tasks } = useAppSelector(state => state.tasks);
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const [search, setSearch] = useState("");
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -46,9 +49,6 @@ const Navbar: FC = () => {
   useEffect(() => {
     dispatch(clearMessage());
   }, [location, dispatch]);
-  useEffect(() => {
-    if (user) dispatch(queryTasks({ search }));
-  }, [dispatch, search, tasks, user]);
 
   return (
     <Box bg="blue.500" p={4}>
@@ -62,7 +62,7 @@ const Navbar: FC = () => {
           >
             To Do
           </LinkBox>
-          {user && (
+          {user ? (
             <>
               <InputGroup w="75">
                 <InputLeftElement
@@ -72,8 +72,9 @@ const Navbar: FC = () => {
                 <Input
                   type="text"
                   placeholder="Search Tasks"
+                  name="search"
                   focusBorderColor="white"
-                  onChange={e => setSearch(e.target.value)}
+                  onChange={onChange}
                 />
               </InputGroup>
               <Menu>
@@ -99,6 +100,15 @@ const Navbar: FC = () => {
                 </MenuList>
               </Menu>
             </>
+          ) : (
+            <Stack spacing={4} direction="row">
+              <Button colorScheme="pink" as={Link} to="/login">
+                Login
+              </Button>
+              <Button as={Link} to="/signup">
+                Sign Up
+              </Button>
+            </Stack>
           )}
         </Flex>
       </Container>
