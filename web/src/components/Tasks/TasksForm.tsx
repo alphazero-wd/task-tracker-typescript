@@ -25,7 +25,6 @@ const TasksForm: FC = () => {
             isDisabled={!taskValues}
             variant="ghost"
             type="submit"
-            data-testid="add"
           />
         </Tooltip>
         <Input
