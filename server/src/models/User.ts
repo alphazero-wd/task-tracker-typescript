@@ -31,7 +31,4 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Task, task => task.userId)
   tasks: Task[];
-
-  @Column({default: false})
-  isAdmin: boolean;
 }
