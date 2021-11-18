@@ -10,14 +10,14 @@ import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors";
 import { __prod__ } from "./utils/constants";
 (async () => {
-  await createConnection({
+  const connection = await createConnection({
     type: "postgres",
     entities: [Task, User],
     url: process.env.CONNECTION_URI,
     logging: !__prod__,
     synchronize: !__prod__,
   });
-
+  await connection.runMigrations();
   const app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
