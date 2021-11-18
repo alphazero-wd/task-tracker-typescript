@@ -53,6 +53,31 @@ const Navbar: FC<Props> = ({ onChange }) => {
   }, [user]);
   useEffect(() => {
     dispatch(clearMessage());
+    switch (location.pathname) {
+      case '/':
+        document.title = 'To Do';
+        break;
+      case '/login':
+        document.title = 'Login';
+        break;
+      case '/signup':
+        document.title = 'Sign Up';
+        break;
+      case '/tasks':
+        document.title = `Tasks | ${user?.username}`;
+        break;
+      case '/forgot-password':
+        document.title = 'Forgot Password';
+        break;
+      case `/reset-password/${user?.token}`:
+        document.title = 'Reset Password';
+        break;
+      case '/profile':
+        document.title = 'Profile | ' + user?.username;
+        break;
+      default:
+        break;
+    }
   }, [location, dispatch]);
 
   return (
