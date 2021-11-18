@@ -2,6 +2,7 @@ import { IconButton } from "@chakra-ui/button";
 import { AddIcon } from "@chakra-ui/icons";
 import { Input } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
+import { Tooltip } from "@chakra-ui/tooltip";
 import { FC, FormEvent, useState } from "react";
 import { addTask } from "../../reducers/tasks";
 import { useAppDispatch } from "../../store";
@@ -16,14 +17,17 @@ const TasksForm: FC = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={5} direction={{ md: "row" }}>
-        <IconButton
-          colorScheme="blue"
-          aria-label="Add a task"
-          icon={<AddIcon />}
-          isDisabled={!taskValues}
-          variant="ghost"
-          type="submit"
-        />
+        <Tooltip placement="top" label="Click to add a task">
+          <IconButton
+            colorScheme="blue"
+            aria-label="Add a task"
+            icon={<AddIcon />}
+            isDisabled={!taskValues}
+            variant="ghost"
+            type="submit"
+            data-testid="add"
+          />
+        </Tooltip>
         <Input
           onChange={e => setTaskValues(e.target.value)}
           placeholder="Add a Task..."

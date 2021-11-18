@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect } from "react";
 import {
   Table,
   Thead,
@@ -8,16 +8,16 @@ import {
   Image,
   Text,
   TableCaption,
-} from '@chakra-ui/react';
-import { Stack } from '@chakra-ui/layout';
-import Task from './Task';
-import { useAppSelector, useAppDispatch } from '../../store';
-import { getTasks } from '../../reducers/tasks';
-import Loading from '../Loading';
-import emptyImg from '../../images/empty.svg';
+} from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/layout";
+import Task from "./Task";
+import { useAppSelector, useAppDispatch } from "../../store";
+import { getTasks } from "../../reducers/tasks";
+import Loading from "../Loading";
+import emptyImg from "../../images/empty.svg";
 const Tasks: FC = () => {
   const { displayedTasks, loading, tasks } = useAppSelector(
-    (state) => state.tasks
+    state => state.tasks
   );
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -29,8 +29,8 @@ const Tasks: FC = () => {
   if (displayedTasks.length === 0) {
     return (
       <Stack alignItems="center" mt={8} spacing={4}>
-        <Image src={emptyImg} w={['80%', '60%', '40%', '25%']} />
-        <Text fontSize="xl">You have no tasks left. Please add a task.</Text>
+        <Image src={emptyImg} w={["80%", "60%", "40%", "25%"]} />
+        <Text fontSize="xl">No Tasks Found.</Text>
       </Stack>
     );
   }
@@ -41,12 +41,12 @@ const Tasks: FC = () => {
       <Thead>
         <Tr>
           <Th>Task</Th>
-          <Th display={['none', 'none', 'table-cell']}>Date</Th>
+          <Th display={["none", "none", "table-cell"]}>Date</Th>
           <Th isNumeric>Tools</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {displayedTasks.map((task) => (
+        {displayedTasks.map(task => (
           <Task key={task.taskId} {...task} />
         ))}
       </Tbody>

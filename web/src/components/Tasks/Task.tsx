@@ -26,7 +26,7 @@ const Task: FC<TaskProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Tr bg={isImportant ? "blue.100" : ""} color={isImportant ? "blue" : ""}>
+      <Tr>
         <Td>
           <Stack direction="row" spacing={4}>
             <Tooltip hasArrow placement="top" label="Mark as Complete">
@@ -55,6 +55,7 @@ const Task: FC<TaskProps> = ({
                 onClick={() =>
                   dispatch(updateTask({ isImportant: !isImportant, taskId }))
                 }
+                colorScheme={isImportant ? "yellow" : ""}
               />
             </Tooltip>
             <Tooltip hasArrow placement="top" label="Edit Task">
