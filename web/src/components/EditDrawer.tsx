@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useEffect, useRef, useState } from 'react';
 import {
   Drawer,
   DrawerBody,
@@ -14,10 +14,10 @@ import {
   DrawerFooter,
   Button,
   Text,
-} from "@chakra-ui/react";
-import { useAppSelector, useAppDispatch } from "../store";
-import { updateTask } from "../reducers/tasks";
-import moment from "moment";
+} from '@chakra-ui/react';
+import { useAppSelector, useAppDispatch } from '../store';
+import { updateTask } from '../reducers/tasks';
+import moment from 'moment';
 interface Props {
   onClose: () => void;
   isOpen: boolean;
@@ -25,19 +25,19 @@ interface Props {
 }
 const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
   const [editValues, setEditValues] = useState({
-    taskName: "",
+    taskName: '',
     isImportant: false,
     isCompleted: false,
   });
   const [taskDate, setTaskDate] = useState({
-    createdAt: "",
-    updatedAt: "",
+    createdAt: '',
+    updatedAt: '',
   });
-  const { tasks } = useAppSelector(state => state.tasks);
+  const { tasks } = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (taskId) {
-      const task = tasks.find(task => task.taskId === taskId);
+      const task = tasks.find((task) => task.taskId === taskId);
       if (task) {
         setEditValues({
           taskName: task!.taskName,
@@ -45,8 +45,8 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
           isImportant: task!.isImportant,
         });
         setTaskDate({
-          createdAt: moment(task.createdAt).format("MMMM Do YYYY, h:mm a"),
-          updatedAt: moment(task.updatedAt).format(" MMMM Do YYYY, h:mm a"),
+          createdAt: moment(task.createdAt).format('MMMM Do YYYY, h:mm a'),
+          updatedAt: moment(task.updatedAt).format(' MMMM Do YYYY, h:mm a'),
         });
       }
     }
@@ -54,7 +54,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target } = e;
     const inputValue =
-      target.type === "checkbox" ? target.checked : target.value;
+      target.type === 'checkbox' ? target.checked : target.value;
     setEditValues({ ...editValues, [target.name]: inputValue });
   };
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -93,28 +93,34 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
                   placeholder="Edit your task name here..."
                 />
               </Box>
-              <Box display="flex" alignItems="center">
+              <Stack spacing={4} direction="row" alignItems="center">
                 <Checkbox
                   isChecked={editValues.isImportant}
                   onChange={onChange}
                   name="isImportant"
-                  mr={3}
+                  id="isImportant"
                 />
-                <FormLabel>Mark as important</FormLabel>
-              </Box>
-              <Box display="flex" alignItems="center">
+                <FormLabel htmlFor="isImportant">Mark as important</FormLabel>
+              </Stack>
+              <Stack spacing={4} direction="row" alignItems="center">
                 <Checkbox
                   isChecked={editValues.isCompleted}
                   name="isCompleted"
                   onChange={onChange}
-                  mr={3}
+                  id="isCompleted"
                 />
-                <FormLabel>Mark as completed</FormLabel>
-              </Box>
-              <Box>
-                <Text mb={3}>Created At: {taskDate.createdAt}</Text>
-                <Text>Updated At: {taskDate.updatedAt}</Text>
-              </Box>
+                <FormLabel htmlFor="isCompleted">Mark as completed</FormLabel>
+              </Stack>
+              <Stack spacing={4}>
+                <Text display="flex" justifyContent="space-between">
+                  <Text fontWeight="bold">Created At:</Text>{' '}
+                  {taskDate.createdAt}
+                </Text>
+                <Text display="flex" justifyContent="space-between">
+                  <Text fontWeight="bold">Updated At: </Text>{' '}
+                  {taskDate.updatedAt}
+                </Text>
+              </Stack>
             </Stack>
           </DrawerBody>
           <DrawerFooter borderTopWidth="1px">
