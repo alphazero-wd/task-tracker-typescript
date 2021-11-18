@@ -11,7 +11,7 @@ import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
 import AuthInput from "../components/Auth/AuthInput";
 import { signUp } from "../reducers/user";
-import { SignUp as SignUpInterface } from "../api";
+import { SignUp as SignUpInterface } from "../utils/types";
 import { Link } from "react-router-dom";
 
 const SignUp: FC = () => {
@@ -63,12 +63,14 @@ const SignUp: FC = () => {
             placeholder="Username"
             name="username"
             error={error}
+            value={signUpValues.username}
           />
           <AuthInput
             onChange={onChange}
             placeholder="Email address"
             name="email"
             error={error}
+            value={signUpValues.email}
           />
           <AuthInput
             onChange={onChange}
@@ -76,8 +78,9 @@ const SignUp: FC = () => {
             name="password"
             type="password"
             error={error}
+            value={signUpValues.password}
           />
-          <UnorderedList>
+          <UnorderedList px={5}>
             <ListItem>Password should be above 6 characters.</ListItem>
             <ListItem>
               Password should contain one lowercase and one uppercase letter.
@@ -92,6 +95,7 @@ const SignUp: FC = () => {
             name="confirmPassword"
             type="password"
             error={error}
+            value={signUpValues.confirmPassword}
           />
           <Button
             type="submit"

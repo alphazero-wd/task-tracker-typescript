@@ -3,7 +3,9 @@ import {
   ChevronDownIcon,
   SettingsIcon,
   ArrowForwardIcon,
-} from "@chakra-ui/icons";
+  SunIcon,
+  MoonIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -14,42 +16,67 @@ import {
   InputLeftElement,
   LinkBox,
   Menu,
+  IconButton,
   MenuButton,
   MenuGroup,
   MenuItem,
   MenuList,
-} from "@chakra-ui/react";
-import { Link, useLocation } from "react-router-dom";
-import { FC, useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../store";
-import { clearMessage, logout } from "../reducers/user";
-import { queryTasks } from "../reducers/tasks";
+  Stack,
+  useColorMode,
+} from '@chakra-ui/react';
+import { Link, useLocation } from 'react-router-dom';
+import { FC, useEffect, ChangeEvent } from 'react';
+import { useAppSelector, useAppDispatch } from '../store';
+import { clearMessage, logout } from '../reducers/user';
+import jwtDecode from 'jwt-decode';
 
-const Navbar: FC = () => {
-  const { user } = useAppSelector(state => state.user);
-  const { tasks } = useAppSelector(state => state.tasks);
+interface Props {
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+}
+
+const Navbar: FC<Props> = ({ onChange }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const [search, setSearch] = useState("");
   useEffect(() => {
-    if (user) localStorage.setItem("user", JSON.stringify(user));
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      const token = user.token;
+      const { exp } = jwtDecode(token) as any;
+      if (token) {
+        if (exp * 1000 - 60000 <= Date.now()) {
+          dispatch(logout());
+        }
+      }
+    }
   }, [user]);
   useEffect(() => {
     dispatch(clearMessage());
   }, [location, dispatch]);
-  useEffect(() => {
-    dispatch(queryTasks({ search }));
-  }, [dispatch, search, tasks]);
+
   return (
-    <Box bg="blue.500" p={4}>
+    <Box bg={colorMode === 'light' ? 'white' : 'gray.700'} p={4}>
       <Container maxW="1200px">
-        <Flex justifyContent="space-between" alignItems="center">
-          <LinkBox fontSize="xl" to="/" color="white">
-            To Do
-          </LinkBox>
-          {user && (
-            <>
-              <InputGroup w="75">
+        <Stack
+          spacing={4}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Stack spacing={4} direction="row" alignItems="center">
+            <LinkBox
+              as={Link}
+              fontSize="xl"
+              to={user ? '/tasks' : '/'}
+              color={colorMode === 'light' ? 'gray.900' : 'white'}
+              fontWeight="bold"
+            >
+              To Do
+            </LinkBox>
+
+            {user && (
+              <InputGroup w="75" mr={3}>
                 <InputLeftElement
                   pointerEvents="none"
                   children={<SearchIcon color="gray.300" />}
@@ -57,10 +84,19 @@ const Navbar: FC = () => {
                 <Input
                   type="text"
                   placeholder="Search Tasks"
-                  focusBorderColor="white"
-                  onChange={e => setSearch(e.target.value)}
+                  name="search"
+                  onChange={onChange}
                 />
               </InputGroup>
+            )}
+          </Stack>
+          <Stack direction="row" spacing={4}>
+            <IconButton
+              aria-label="Toggle Theme"
+              icon={colorMode === 'light' ? <SunIcon /> : <MoonIcon />}
+              onClick={toggleColorMode}
+            />
+            {user ? (
               <Menu>
                 <MenuButton
                   rightIcon={<ChevronDownIcon />}
@@ -71,8 +107,8 @@ const Navbar: FC = () => {
                 </MenuButton>
                 <MenuList>
                   <MenuGroup title={user?.username}>
-                    <MenuItem icon={<SettingsIcon />}>
-                      <Link to="/account">Your Account</Link>
+                    <MenuItem as={Link} to="/profile" icon={<SettingsIcon />}>
+                      Your Profile
                     </MenuItem>
                     <MenuItem
                       onClick={() => dispatch(logout())}
@@ -83,9 +119,23 @@ const Navbar: FC = () => {
                   </MenuGroup>
                 </MenuList>
               </Menu>
-            </>
-          )}
-        </Flex>
+            ) : (
+              <Stack spacing={4} direction="row">
+                <Button colorScheme="pink" as={Link} to="/login">
+                  Login
+                </Button>
+                <Button
+                  as={Link}
+                  colorScheme="blue"
+                  variant="outline"
+                  to="/signup"
+                >
+                  Sign Up
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+        </Stack>
       </Container>
     </Box>
   );
