@@ -3,13 +3,12 @@
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "postgres",
+  "password": "AlphaZero25811@;",
   "database": "task_tracker",
   "entities": ["src/models/*.ts"],
-  "migrations": ["src/migrations/*.ts"],
+  "migrations": ["src/migration/*.ts"],
   "cli": {
     "migrationsDir": "src/migration",
-    "entitiesDir": "src/models",
-    "subscriberDir": "src/subscribers"
+    "entitiesDir": "src/models"
   }
 }
