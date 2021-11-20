@@ -5,10 +5,9 @@
   "username": "postgres",
   "password": "AlphaZero25811@;",
   "database": "task_tracker",
-  "entities": ["src/models/*.ts"],
-  "migrations": ["src/migration/*.ts"],
-  "cli": {
-    "migrationsDir": "src/migration",
-    "entitiesDir": "src/models"
-  }
+  "synchronize": true,
+  "logging": true,
+  "entities": ["dist/models/**/*.js"],
+  "migrations": ["dist/migrations/**/*.js"],
+  "subscriber": ["dist/subscribers/**/*.js"]
 }
