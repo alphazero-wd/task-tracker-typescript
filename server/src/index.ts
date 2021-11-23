@@ -19,6 +19,7 @@ import path from "path";
       logging: !__prod__,
       // synchronize: !__prod__,
       migrations: [path.join(__dirname, "./migrations/*")],
+      ssl: __prod__ && { rejectUnauthorized: false },
     });
     await connection.runMigrations();
     const app = express();
@@ -28,9 +29,7 @@ import path from "path";
     // change the domain later
     app.use(
       cors({
-        origin: __prod__
-          ? process.env.CORS_ORIGIN_PRODUCTION
-          : process.env.CORS_ORIGIN,
+        origin: process.env.CORS_ORIGIN,
       })
     );
 
@@ -42,7 +41,7 @@ import path from "path";
     app.use("/api/user", userRouter);
     app.use(errorHandler);
 
-    const PORT = parseInt(process.env.PORT!) || 5000;
+    const PORT = process.env.PORT || 5000;
 
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (error) {

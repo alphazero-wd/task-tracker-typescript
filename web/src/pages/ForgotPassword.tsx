@@ -5,16 +5,38 @@ import {
   Button,
   Container,
   Heading,
+  LinkBox,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import AuthInput from "../components/Auth/AuthInput";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
 import { forgotPassword } from "../reducers/user";
 const ForgotPassword: FC = () => {
   const [email, setEmail] = useState("");
   const { message, error } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
+
+  if (message) {
+    return (
+      <Container p={5} mt={5} maxWidth="700px">
+        <Stack spacing={4}>
+          <Heading fontSize="3xl" textAlign="center">
+            Email Sent
+          </Heading>
+          <Text>
+            Reset Password Confirmation has been sent to your email account.
+            Please check (include in the trash).
+          </Text>
+          <LinkBox as={Link} color="blue.500" to="/forgot-password">
+            Change your email?
+          </LinkBox>
+        </Stack>
+      </Container>
+    );
+  }
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(forgotPassword(email));
