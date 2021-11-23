@@ -5,7 +5,7 @@
 - Back End: https://pern-todo-api.herokuapp.com/
 
 # Project Image:
-![Capture](https://user-images.githubusercontent.com/83436069/142996815-a603e8d1-81a4-4359-9b96-2e547bf5ad54.PNG)
+![image](https://user-images.githubusercontent.com/83436069/142997007-a0fffd44-6bdb-4310-9189-e601d7ae9a5e.png)
 
 # About the Project:
 - This is a CRUD To Do Application which was built using the PERN Stack (PostgreSQL, Express, React and NodeJS) + Typescript.
