@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Login, ResetValues, SignUp, Task, UpdateValues } from "../utils/types";
 
-const api = axios.create({ baseURL: "http://localhost:5000/api" });
+const api = axios.create({ baseURL: `${process.env.REACT_APP_API_URL}/api` });
 api.interceptors.request.use(req => {
   const user = JSON.parse(localStorage.getItem("user") as any);
   if (user) {

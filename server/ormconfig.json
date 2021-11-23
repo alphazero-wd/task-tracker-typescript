@@ -5,10 +5,11 @@
   "username": "postgres",
   "password": "AlphaZero25811@;",
   "database": "task_tracker",
-  "entities": ["src/models/*.ts"],
-  "migrations": ["src/migration/*.ts"],
+  "entities": ["dist/models/*.js"],
+  "migrations": ["dist/migrations/*.js"],
   "cli": {
-    "migrationsDir": "src/migration",
-    "entitiesDir": "src/models"
+    "entitiesDir": "src/models",
+    "migrationsDir": "src/migrations",
+    "subscribersDir": "src/subscribers"
   }
 }

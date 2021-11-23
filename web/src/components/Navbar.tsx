@@ -5,6 +5,7 @@ import {
   ArrowForwardIcon,
   SunIcon,
   MoonIcon,
+  EditIcon,
 } from "@chakra-ui/icons";
 import {
   Box,
@@ -118,7 +119,7 @@ const Navbar: FC<Props> = ({ onChange }) => {
           <Stack direction="row" spacing={4}>
             <IconButton
               aria-label="Toggle Theme"
-              icon={colorMode === "light" ? <SunIcon /> : <MoonIcon />}
+              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               onClick={toggleColorMode}
             />
             {user ? (
@@ -134,6 +135,9 @@ const Navbar: FC<Props> = ({ onChange }) => {
                   <MenuGroup title={user?.username}>
                     <MenuItem as={Link} to="/profile" icon={<SettingsIcon />}>
                       Your Profile
+                    </MenuItem>
+                    <MenuItem as={Link} to="/tasks" icon={<EditIcon />}>
+                      Your Tasks
                     </MenuItem>
                     <MenuItem
                       onClick={() => dispatch(logout())}

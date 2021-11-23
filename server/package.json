@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./dist/index",
+    "build": "tsc",
     "dev": "tsc -w",
-    "server": "nodemon dist/index",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    "server": "nodemon dist/index"
   },
   "keywords": [],
   "author": "",
