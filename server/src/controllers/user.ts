@@ -58,13 +58,13 @@ export const signup: ControllerFn = async (req, res, next) => {
 export const login: ControllerFn = async (req, res, next) => {
   try {
     const { usernameOrEmail, password } = req.body;
-    let user: User | undefined;
-
-    if (!usernameOrEmail.includes('@')) {
-      user = await User.findOne({ where: { username: usernameOrEmail } });
-    } else {
-      user = await User.findOne({ where: { email: usernameOrEmail } });
-    }
+    const user = await User.findOne({
+      where: !usernameOrEmail.includes('@')
+        ? {
+            username: usernameOrEmail,
+          }
+        : { email: usernameOrEmail },
+    });
 
     if (!user)
       return next(
