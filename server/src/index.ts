@@ -18,7 +18,7 @@ import path from "path";
       url: process.env.DATABASE_URL,
       logging: !__prod__,
       // synchronize: !__prod__,
-      migrations: [path.join(__dirname, "migrations")],
+      migrations: [path.join(__dirname, "./migrations/*")],
     });
     await connection.runMigrations();
     const app = express();
