@@ -3,7 +3,7 @@
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "AlphaZero25811@;",
+  "password": "",
   "database": "task_tracker",
   "entities": ["dist/models/*.js"],
   "migrations": ["dist/migrations/*.js"],
