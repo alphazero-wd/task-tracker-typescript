@@ -4,10 +4,12 @@
 - Front End: https://todo-pern.netlify.app/
 - Back End: https://pern-todo-api.herokuapp.com/
 
-# Project Image:
+## Project Image:
+
 ![image](https://user-images.githubusercontent.com/83436069/142997007-a0fffd44-6bdb-4310-9189-e601d7ae9a5e.png)
 
-# About the Project:
+## About the Project:
+
 - This is a CRUD To Do Application which was built using the PERN Stack (PostgreSQL, Express, React and NodeJS) + Typescript.
 - User can: add a task, update a task name, mark a task as completed or important, delete the task, filter and sort tasks, and view the date when a task was created.
 - The UI was built using Chakra-UI framework, dark and light theme were also added.
@@ -15,4 +17,4 @@
 - What's more, forgot password, reset password were added and user can update their profile (e.g username and password) and delete their account.
 - The website was deployed using Heroku for the server-side and Netlify for client-side.
 
-# Hope you enjoy the project and give me some feedbacks on my work. I greatly appreciate that!
+## Hope you enjoy the project and give me some feedbacks on my work. I greatly appreciate that!

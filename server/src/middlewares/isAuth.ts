@@ -1,21 +1,19 @@
 import { verify } from "jsonwebtoken";
-import { ControllerFn } from "src/utils/types";
-import { ErrorResponse } from "../utils/ErrorResponse";
+import { MyContext } from "../types/MyContext";
+import { MiddlewareFn } from "type-graphql";
 
-export const isAuth: ControllerFn = (req, _res, next) => {
-  try {
-    const authHeaders = req.headers.authorization;
-
-    if (!authHeaders)
-      return next(new ErrorResponse("You are not authorized.", 401));
-
-    const token = authHeaders.split(" ")[1];
-    if (token) {
-      const payload = verify(token, process.env.JWT_ACCESS_TOKEN_KEY!);
-      req.payload = payload as any;
-    } else return next(new ErrorResponse("You are not authorized", 403));
-    next();
-  } catch (error) {
-    return next(new ErrorResponse(error.message));
+export const isAuth: MiddlewareFn<MyContext> = async (
+  { context: { req } },
+  next
+) => {
+  const authHeaders = req.headers.authorization;
+  if (!authHeaders || !authHeaders.startsWith("Bearer ")) {
+    throw new Error("You are not authorized.");
   }
+  const token = authHeaders.split(" ")[1];
+  if (token) {
+    const payload = verify(token, process.env.JWT_ACCESS_TOKEN_KEY!);
+    req.payload = payload as any;
+  }
+  return next();
 };
