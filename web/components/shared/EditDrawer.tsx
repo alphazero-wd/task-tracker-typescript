@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useEffect, useRef, useState } from "react";
+import { FC, useRef, useState } from 'react';
 import {
   Drawer,
   DrawerBody,
@@ -14,7 +14,7 @@ import {
   DrawerFooter,
   Button,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 // import moment from "moment";
 interface Props {
   onClose: () => void;
@@ -23,13 +23,13 @@ interface Props {
 }
 const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
   const [editValues, setEditValues] = useState({
-    taskName: "",
+    taskName: '',
     isImportant: false,
     isCompleted: false,
   });
   const [taskDate, setTaskDate] = useState({
-    createdAt: "",
-    updatedAt: "",
+    createdAt: '',
+    updatedAt: '',
   });
   const firstField = useRef(null);
   return (
@@ -76,11 +76,11 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
               </Stack>
               <Stack spacing={4}>
                 <Text display="flex" justifyContent="space-between">
-                  <Text fontWeight="bold">Created At:</Text>{" "}
+                  <Text fontWeight="bold">Created At:</Text>{' '}
                   {/* {taskDate.createdAt} */}
                 </Text>
                 <Text display="flex" justifyContent="space-between">
-                  <Text fontWeight="bold">Updated At: </Text>{" "}
+                  <Text fontWeight="bold">Updated At: </Text>{' '}
                   {/* {taskDate.updatedAt} */}
                 </Text>
               </Stack>
@@ -91,9 +91,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
               Cancel
             </Button>
             <Button
-              isDisabled={
-                !editValues.taskName || editValues.taskName === task?.taskName
-              }
+              isDisabled={!editValues.taskName}
               type="submit"
               colorScheme="blue"
               onClick={onClose}

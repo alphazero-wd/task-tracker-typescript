@@ -1,6 +1,5 @@
-import { Length } from "class-validator";
-import { User } from "../entity/User";
-import { Field, InputType, ObjectType } from "type-graphql";
+import { User } from '../entity/User';
+import { Field, InputType, ObjectType } from 'type-graphql';
 
 @ObjectType()
 class ErrorResponse {
@@ -14,7 +13,6 @@ class ErrorResponse {
 @InputType()
 export class SignupInput {
   @Field()
-  @Length(3, 64)
   username!: string;
 
   @Field()
@@ -25,6 +23,15 @@ export class SignupInput {
 
   @Field()
   confirmPassword!: string;
+}
+
+@InputType()
+export class LoginInput {
+  @Field()
+  usernameOrEmail!: string;
+
+  @Field()
+  password!: string;
 }
 
 @ObjectType()

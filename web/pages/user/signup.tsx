@@ -5,21 +5,21 @@ import {
   UnorderedList,
   Text,
   ListItem,
-} from "@chakra-ui/layout";
-import { Button, Stack } from "@chakra-ui/react";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, useState } from "react";
-import AuthInput from "../../components/Auth/AuthInput";
-import { useSignupMutation } from "../../generated/graphql";
-import Link from "next/link";
+} from '@chakra-ui/layout';
+import { Button, Stack } from '@chakra-ui/react';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import AuthInput from '../../components/Auth/AuthInput';
+import { useSignupMutation } from '../../generated/graphql';
+import Link from 'next/link';
 
 const Signup: NextPage = () => {
   const [signUpValues, setSignUpValues] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
   const [signup, { loading, data }] = useSignupMutation();
   const router = useRouter();
@@ -42,16 +42,17 @@ const Signup: NextPage = () => {
     console.log(response.data);
     if (response.data?.signup.user) {
       setSignUpValues({
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
       });
-      router.push("/tasks");
+      router.push('/tasks');
+      localStorage.setItem('token', JSON.stringify(response.data.signup.token));
     } else if (response.data?.signup.error) {
       setSignUpValues({
         ...signUpValues,
-        [response.data.signup.error.field as string]: "",
+        [response.data.signup.error.field as string]: '',
       });
     }
     return response;
@@ -119,7 +120,7 @@ const Signup: NextPage = () => {
         </Stack>
       </form>
       <Text textAlign="center" mt={4}>
-        Already Have An Account?{" "}
+        Already Have An Account?{' '}
         <LinkBox color="blue.500" display="inline">
           <Link href="/user/login">Login</Link>
         </LinkBox>

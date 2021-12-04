@@ -1,25 +1,25 @@
-import "reflect-metadata";
-import "dotenv/config";
-import { createConnection } from "typeorm";
-import express from "express";
-import cors from "cors";
-import { __prod__ } from "./utils/constants";
-import path from "path";
-import { buildSchema } from "type-graphql";
-import { ApolloServer } from "apollo-server-express";
+import 'reflect-metadata';
+import 'dotenv/config';
+import { createConnection } from 'typeorm';
+import express from 'express';
+import cors from 'cors';
+import { __prod__ } from './utils/constants';
+import path from 'path';
+import { buildSchema } from 'type-graphql';
+import { ApolloServer } from 'apollo-server-express';
 
 (async () => {
   try {
     const schema = await buildSchema({
-      resolvers: [path.join(__dirname, "resolvers/*.*")],
+      resolvers: [path.join(__dirname, 'resolvers/*.*')],
     });
     const connection = await createConnection({
-      type: "postgres",
-      entities: [path.join(__dirname, "entity/*.*")],
+      type: 'postgres',
+      entities: [path.join(__dirname, 'entity/*.*')],
       url: process.env.DATABASE_URL,
       logging: !__prod__,
       synchronize: !__prod__,
-      migrations: [path.join(__dirname, "./migration/*")],
+      // migrations: [path.join(__dirname, './migration/*')],
       ssl: __prod__ && { rejectUnauthorized: false },
     });
     await connection.runMigrations();
