@@ -8,8 +8,11 @@ import {
 } from "@chakra-ui/layout";
 import { Button, Stack } from "@chakra-ui/react";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import AuthInput from "../../components/Auth/AuthInput";
+import { useSignupMutation } from "../../generated/graphql";
+import Link from "next/link";
 
 const Signup: NextPage = () => {
   const [signUpValues, setSignUpValues] = useState({
@@ -18,25 +21,40 @@ const Signup: NextPage = () => {
     password: "",
     confirmPassword: "",
   });
+  const [signup, { loading, data }] = useSignupMutation();
+  const router = useRouter();
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSignUpValues({ ...signUpValues, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newUser = {
+
+    const user = {
       username: signUpValues.username,
       email: signUpValues.email,
       password: signUpValues.password,
       confirmPassword: signUpValues.confirmPassword,
     };
 
-    setSignUpValues({
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    const response = await signup({ variables: { user } });
+    console.log(response.data);
+    if (response.data?.signup.user) {
+      setSignUpValues({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      router.push("/tasks");
+    } else if (response.data?.signup.error) {
+      setSignUpValues({
+        ...signUpValues,
+        [response.data.signup.error.field as string]: "",
+      });
+    }
+    return response;
   };
 
   return (
@@ -51,12 +69,14 @@ const Signup: NextPage = () => {
             placeholder="Username"
             name="username"
             value={signUpValues.username}
+            error={data?.signup.error}
           />
           <AuthInput
             onChange={onChange}
             placeholder="Email address"
             name="email"
             value={signUpValues.email}
+            error={data?.signup.error}
           />
           <AuthInput
             onChange={onChange}
@@ -64,6 +84,7 @@ const Signup: NextPage = () => {
             name="password"
             type="password"
             value={signUpValues.password}
+            error={data?.signup.error}
           />
           <UnorderedList px={5}>
             <ListItem>Password should be above 6 characters.</ListItem>
@@ -80,6 +101,7 @@ const Signup: NextPage = () => {
             name="confirmPassword"
             type="password"
             value={signUpValues.confirmPassword}
+            error={data?.signup.error}
           />
           <Button
             type="submit"
@@ -90,13 +112,17 @@ const Signup: NextPage = () => {
               !signUpValues.password ||
               !signUpValues.confirmPassword
             }
+            isLoading={loading}
           >
             Sign Up
           </Button>
         </Stack>
       </form>
       <Text textAlign="center" mt={4}>
-        Already Have An Account? <LinkBox color="blue.500">Login</LinkBox>
+        Already Have An Account?{" "}
+        <LinkBox color="blue.500" display="inline">
+          <Link href="/user/login">Login</Link>
+        </LinkBox>
       </Text>
     </Container>
   );

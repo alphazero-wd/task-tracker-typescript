@@ -2,6 +2,7 @@ import { Container, Heading, LinkBox, Stack, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { ChangeEvent, FormEvent, useState } from "react";
+import Link from "next/link";
 import AuthInput from "../../components/Auth/AuthInput";
 
 const Login: NextPage = () => {
@@ -49,8 +50,12 @@ const Login: NextPage = () => {
           </Button>
         </Stack>
       </form>
+
       <Text textAlign="center" mt={4}>
-        Don't Have An Account? <LinkBox color="blue.500">Sign Up</LinkBox>
+        Don't Have An Account?
+        <LinkBox color="blue.500" display="inline">
+          <Link href="/user/login">Login</Link>
+        </LinkBox>
       </Text>
     </Container>
   );

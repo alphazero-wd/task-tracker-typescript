@@ -1,15 +1,13 @@
 import { Alert, AlertIcon } from "@chakra-ui/alert";
 import { Input, InputGroup } from "@chakra-ui/input";
 import { ChangeEvent, FC } from "react";
+import { ErrorResponse } from "../../generated/graphql";
 interface InputProps {
   type?: "password" | "email";
   placeholder: string;
   name: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  error?: {
-    field?: string;
-    message?: string;
-  } | null;
+  error?: ErrorResponse | null;
   value: string;
 }
 const AuthInput: FC<InputProps> = ({
