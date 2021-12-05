@@ -32,19 +32,19 @@ const Profile: FC = () => {
   };
   return (
     <>
-      <Container maxW="900px" p={5} mt={5}>
+      <Container maxW="600px" p={5} mt={5}>
         {" "}
         <Heading mb={5}>Your Profile</Heading>
         <form onSubmit={updateUsername}>
           <FormLabel>Username:</FormLabel>
-          <Stack spacing={4}>
+          <Stack direction="row" spacing={4}>
             <AuthInput
               name="username"
               placeholder="Edit your username here..."
               onChange={onChange}
               value={profile.username}
             />
-            <Button colorScheme="blue" type="submit">
+            <Button maxW="300px" colorScheme="blue" type="submit">
               Edit
             </Button>
           </Stack>

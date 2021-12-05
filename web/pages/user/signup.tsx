@@ -5,21 +5,25 @@ import {
   UnorderedList,
   Text,
   ListItem,
-} from '@chakra-ui/layout';
-import { Button, Stack } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useState } from 'react';
-import AuthInput from '../../components/Auth/AuthInput';
-import { useSignupMutation } from '../../generated/graphql';
-import Link from 'next/link';
+} from "@chakra-ui/layout";
+import { Button, Stack, AlertIcon, Alert } from "@chakra-ui/react";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { ChangeEvent, FormEvent, useState } from "react";
+import AuthInput from "../../components/Auth/AuthInput";
+import {
+  MeDocument,
+  MeQuery,
+  useSignupMutation,
+} from "../../generated/graphql";
+import Link from "next/link";
 
 const Signup: NextPage = () => {
   const [signUpValues, setSignUpValues] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [signup, { loading, data }] = useSignupMutation();
   const router = useRouter();
@@ -38,32 +42,49 @@ const Signup: NextPage = () => {
       confirmPassword: signUpValues.confirmPassword,
     };
 
-    const response = await signup({ variables: { user } });
-    console.log(response.data);
+    const response = await signup({
+      variables: { user },
+      update: (cache, { data }) => {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            __typename: "Query",
+            me: data?.signup.user,
+          },
+        });
+      },
+    });
+
     if (response.data?.signup.user) {
       setSignUpValues({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
       });
-      router.push('/tasks');
-      localStorage.setItem('token', JSON.stringify(response.data.signup.token));
+      router.push("/tasks");
+      localStorage.setItem("token", JSON.stringify(response.data.signup.token));
     } else if (response.data?.signup.error) {
       setSignUpValues({
         ...signUpValues,
-        [response.data.signup.error.field as string]: '',
+        [response.data.signup.error.field as string]: "",
       });
     }
     return response;
   };
 
   return (
-    <Container maxW="700px" p={5} mt={5}>
+    <Container maxW="600px" p={5} mt={5}>
       <Heading fontSize="3xl" textAlign="center" mb={3}>
         Sign Up
       </Heading>
       <form onSubmit={onSubmit}>
+        {data?.signup.error && (
+          <Alert status="error">
+            <AlertIcon />
+            {data.signup.error?.message}
+          </Alert>
+        )}
         <Stack spacing={4} mt={5}>
           <AuthInput
             onChange={onChange}
@@ -120,7 +141,7 @@ const Signup: NextPage = () => {
         </Stack>
       </form>
       <Text textAlign="center" mt={4}>
-        Already Have An Account?{' '}
+        Already Have An Account?{" "}
         <LinkBox color="blue.500" display="inline">
           <Link href="/user/login">Login</Link>
         </LinkBox>

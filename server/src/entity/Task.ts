@@ -5,7 +5,6 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   CreateDateColumn,
-  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from "typeorm";
@@ -27,10 +26,6 @@ export class Task extends BaseEntity {
   createdAt: Date;
 
   @Field()
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @Field()
   @Column({ default: false })
   isCompleted: boolean;
 
@@ -38,10 +33,7 @@ export class Task extends BaseEntity {
   @Column({ default: false })
   isImportant: boolean;
 
-  @ManyToOne(() => User, user => user.userId, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(() => User, user => user.userId, { onDelete: "CASCADE" })
   @JoinColumn()
   userId: number;
 }

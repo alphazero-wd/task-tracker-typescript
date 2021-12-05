@@ -1,12 +1,5 @@
-fragment userFragment on UserResponse {
-  user {
-    userId
-    username
-    email
-  }
-  token
-  error {
-    field
-    message
-  }
+fragment UserFragment on User {
+  userId
+  username
+  email
 }
