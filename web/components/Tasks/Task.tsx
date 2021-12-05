@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
 import {
   Tr,
   Td,
@@ -8,14 +8,20 @@ import {
   Checkbox,
   Text,
   useDisclosure,
-} from "@chakra-ui/react";
-import { FC } from "react";
-import { Task as TaskProps } from "../../../web/src/utils/types";
-import moment from "moment";
-import { useAppDispatch } from "../../../web/src/store";
-import { deleteTask, updateTask } from "../../../web/src/reducers/tasks";
-import EditDrawer from "../EditDrawer";
-const Task: FC<TaskProps> = ({
+} from '@chakra-ui/react';
+import { FC } from 'react';
+import moment from 'moment';
+import EditDrawer from '../shared/EditDrawer';
+
+interface Props {
+  taskId: number | string;
+  taskName: string;
+  isCompleted: boolean;
+  isImportant: boolean;
+  createdAt: Date;
+}
+
+const Task: FC<Props> = ({
   taskId,
   taskName,
   isCompleted,
@@ -29,20 +35,13 @@ const Task: FC<TaskProps> = ({
         <Td>
           <Stack direction="row" spacing={4}>
             <Tooltip hasArrow placement="top" label="Mark as Complete">
-              <Checkbox
-                onChange={() =>
-                  dispatch(updateTask({ isCompleted: !isCompleted, taskId }))
-                }
-                isChecked={isCompleted}
-                colorScheme="green"
-                size="lg"
-              />
+              <Checkbox isChecked={isCompleted} colorScheme="green" size="lg" />
             </Tooltip>
             <Text>{taskName}</Text>
           </Stack>
         </Td>
-        <Td display={["none", "none", "table-cell"]}>
-          {moment(createdAt).format("DD MMM, YYYY")}
+        <Td display={['none', 'none', 'table-cell']}>
+          {moment(createdAt).format('DD MMM, YYYY')}
         </Td>
         <Td>
           <Stack direction="row" justifyContent="flex-end" spacing={[3, 4]}>
@@ -51,7 +50,7 @@ const Task: FC<TaskProps> = ({
                 aria-label="Toggle Important"
                 icon={<StarIcon />}
                 variant="ghost"
-                colorScheme={isImportant ? "yellow" : ""}
+                colorScheme={isImportant ? 'yellow' : ''}
               />
             </Tooltip>
             <Tooltip hasArrow placement="top" label="Edit Task">

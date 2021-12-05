@@ -1,5 +1,0 @@
-query GetTasks {
-  getTasks {
-    ...TaskFragment
-  }
-}

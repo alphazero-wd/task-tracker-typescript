@@ -1,5 +1,5 @@
-import { FC } from "react";
-import Navbar from "./Navbar";
+import { FC } from 'react';
+import Navbar from './Navbar';
 
 const Wrapper: FC = ({ children }) => {
   return (
