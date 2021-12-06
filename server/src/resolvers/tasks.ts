@@ -53,8 +53,8 @@ export class TaskResolver {
 
   @UseMiddleware(isAuth)
   @Mutation(() => Boolean!)
-  async deleteTask(@Arg("taskId") taskId: number): Promise<boolean> {
-    const task = await Task.findOne(taskId);
+  async deleteTask(@Arg("taskId") taskId: string): Promise<boolean> {
+    const task = await Task.findOne(parseInt(taskId));
     if (!task) return false;
 
     await Task.delete(taskId);

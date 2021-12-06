@@ -15,12 +15,18 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import { useTasksQuery } from "../../generated/graphql";
-// import moment from "moment";
+import {
+  useTasksQuery,
+  useUpdateTaskMutation,
+  TasksQuery,
+  TasksDocument,
+} from "../../generated/graphql";
+import moment from "moment";
+
 interface Props {
   onClose: () => void;
   isOpen: boolean;
-  taskId: string | number;
+  taskId: string;
 }
 const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
   const [editValues, setEditValues] = useState({
@@ -28,17 +34,19 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
     isImportant: false,
     isCompleted: false,
   });
-
-  const { data } = useTasksQuery();
+  const [createdAt, setCreatedAt] = useState("");
+  const { data: tasks } = useTasksQuery();
+  const [updateTask] = useUpdateTaskMutation();
 
   useEffect(() => {
-    const task = data?.tasks.find(task => task.taskId === taskId);
+    const task = tasks?.tasks.find(task => task.taskId === taskId);
     setEditValues({
-      taskName: task!.taskName,
-      isCompleted: task!.isCompleted,
-      isImportant: task!.isImportant,
+      taskName: task!.taskName || "",
+      isCompleted: task!.isCompleted || false,
+      isImportant: task!.isImportant || false,
     });
-  }, [taskId, data]);
+    setCreatedAt(task?.createdAt);
+  }, [taskId, tasks]);
 
   const firstField = useRef(null);
 
@@ -51,10 +59,37 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
     });
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    await updateTask({
+      variables: {
+        task: {
+          taskName: editValues.taskName,
+          taskId: parseInt(taskId),
+          isCompleted: editValues.isCompleted,
+        },
+      },
+      update: (cache, { data }) => {
+        cache.writeQuery<TasksQuery>({
+          query: TasksDocument,
+          data: {
+            __typename: "Query",
+            tasks:
+              tasks?.tasks.map(task =>
+                task.taskId === data?.updateTask.taskId
+                  ? {
+                      ...task,
+                      taskName: editValues.taskName,
+                      isCompleted: editValues.isCompleted,
+                      isImportant: editValues.isImportant,
+                    }
+                  : task
+              ) || [],
+          },
+        });
+      },
+    });
   };
-
   return (
     <Drawer
       size="md"
@@ -73,7 +108,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
                 <FormLabel htmlFor="editValue">Task name:</FormLabel>
                 <Input
                   name="taskName"
-                  // onChange={onChange}
+                  onChange={onChange}
                   ref={firstField}
                   value={editValues.taskName}
                   placeholder="Edit your task name here..."
@@ -92,7 +127,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
                 <Checkbox
                   isChecked={editValues.isCompleted}
                   name="isCompleted"
-                  // onChange={onChange}
+                  onChange={onChange}
                   id="isCompleted"
                 />
                 <FormLabel htmlFor="isCompleted">Mark as completed</FormLabel>
@@ -100,7 +135,9 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
               <Stack spacing={4}>
                 <Text display="flex" justifyContent="space-between">
                   <Text fontWeight="bold">Created At:</Text>{" "}
-                  {/* {taskDate.createdAt} */}
+                  <Text>
+                    {moment(createdAt).format("ddd, MMM D YYYY, h:mm a")}
+                  </Text>
                 </Text>
               </Stack>
             </Stack>
@@ -110,7 +147,11 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
               Cancel
             </Button>
             <Button
-              isDisabled={!editValues.taskName}
+              isDisabled={
+                !editValues.taskName ||
+                editValues.taskName ===
+                  tasks?.tasks.find(task => task.taskId === taskId)?.taskName
+              }
               type="submit"
               colorScheme="blue"
               onClick={onClose}

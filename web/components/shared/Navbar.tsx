@@ -6,7 +6,7 @@ import {
   SunIcon,
   MoonIcon,
   EditIcon,
-} from '@chakra-ui/icons';
+} from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -23,12 +23,12 @@ import {
   MenuList,
   Stack,
   useColorMode,
-} from '@chakra-ui/react';
-import { FC } from 'react';
-import Link from 'next/link';
-import { MeDocument, MeQuery, useMeQuery } from '../../generated/graphql';
-import { useApolloClient } from '@apollo/client';
-import { useRouter } from 'next/router';
+} from "@chakra-ui/react";
+import { FC } from "react";
+import Link from "next/link";
+import { MeDocument, MeQuery, useMeQuery } from "../../generated/graphql";
+import { useApolloClient } from "@apollo/client";
+import { useRouter } from "next/router";
 
 const Navbar: FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -36,7 +36,7 @@ const Navbar: FC = () => {
   const router = useRouter();
   const apolloClient = useApolloClient();
   return (
-    <Box bg={colorMode === 'light' ? 'white' : 'gray.700'} p={4}>
+    <Box bg={colorMode === "light" ? "white" : "gray.700"} p={4}>
       <Container maxW="1200px">
         <Stack
           spacing={4}
@@ -47,8 +47,7 @@ const Navbar: FC = () => {
           <Stack spacing={4} direction="row" alignItems="center">
             <LinkBox
               fontSize="xl"
-              // to={user ? "/tasks" : "/"}
-              color={colorMode === 'light' ? 'gray.900' : 'white'}
+              color={colorMode === "light" ? "gray.900" : "white"}
               fontWeight="bold"
             >
               To Do
@@ -57,7 +56,7 @@ const Navbar: FC = () => {
           <Stack direction="row" spacing={4}>
             <IconButton
               aria-label="Toggle Theme"
-              icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               onClick={toggleColorMode}
             />
             {data?.me ? (
@@ -72,28 +71,22 @@ const Navbar: FC = () => {
                 <MenuList>
                   <MenuGroup title={`Hello ${data.me.username}`}>
                     <MenuItem
-                      icon={<SettingsIcon />}
-                      onClick={() => router.push('/user/profile')}
-                    >
-                      Your profile
-                    </MenuItem>
-                    <MenuItem
                       icon={<EditIcon />}
-                      onClick={() => router.push('/tasks')}
+                      onClick={() => router.push("/tasks")}
                     >
                       Your Tasks
                     </MenuItem>
                     <MenuItem
                       onClick={async () => {
-                        localStorage.removeItem('token');
+                        localStorage.removeItem("token");
                         apolloClient.writeQuery<MeQuery>({
                           query: MeDocument,
                           data: {
-                            __typename: 'Query',
+                            __typename: "Query",
                             me: null,
                           },
                         });
-                        router.push('/user/login');
+                        router.push("/user/login");
                       }}
                       icon={<ArrowForwardIcon />}
                     >
