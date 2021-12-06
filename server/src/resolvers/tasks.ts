@@ -15,7 +15,7 @@ import { AddTaskInput, UpdateTaskInput } from "../types/Task";
 export class TaskResolver {
   @UseMiddleware(isAuth)
   @Query(() => [Task])
-  async getTasks(@Ctx() { req }: MyContext): Promise<Task[]> {
+  async tasks(@Ctx() { req }: MyContext): Promise<Task[]> {
     const tasks = await Task.find({ where: { userId: req.payload?.userId } });
     return tasks;
   }

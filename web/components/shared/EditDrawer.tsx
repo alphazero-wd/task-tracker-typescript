@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useEffect, useRef, useState } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -14,7 +14,8 @@ import {
   DrawerFooter,
   Button,
   Text,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
+import { useTasksQuery } from "../../generated/graphql";
 // import moment from "moment";
 interface Props {
   onClose: () => void;
@@ -23,15 +24,37 @@ interface Props {
 }
 const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
   const [editValues, setEditValues] = useState({
-    taskName: '',
+    taskName: "",
     isImportant: false,
     isCompleted: false,
   });
-  const [taskDate, setTaskDate] = useState({
-    createdAt: '',
-    updatedAt: '',
-  });
+
+  const { data } = useTasksQuery();
+
+  useEffect(() => {
+    const task = data?.tasks.find(task => task.taskId === taskId);
+    setEditValues({
+      taskName: task!.taskName,
+      isCompleted: task!.isCompleted,
+      isImportant: task!.isImportant,
+    });
+  }, [taskId, data]);
+
   const firstField = useRef(null);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { target } = e;
+
+    setEditValues({
+      ...editValues,
+      [target.name]: target.type === "checkbox" ? target.checked : target.value,
+    });
+  };
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <Drawer
       size="md"
@@ -42,7 +65,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <form>
+        <form onSubmit={onSubmit}>
           <DrawerHeader borderBottomWidth="1px">Task Info</DrawerHeader>
           <DrawerBody>
             <Stack spacing={4}>
@@ -59,7 +82,7 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
               <Stack spacing={4} direction="row" alignItems="center">
                 <Checkbox
                   isChecked={editValues.isImportant}
-                  // onChange={onChange}
+                  onChange={onChange}
                   name="isImportant"
                   id="isImportant"
                 />
@@ -76,12 +99,8 @@ const EditDrawer: FC<Props> = ({ onClose, isOpen, taskId }) => {
               </Stack>
               <Stack spacing={4}>
                 <Text display="flex" justifyContent="space-between">
-                  <Text fontWeight="bold">Created At:</Text>{' '}
+                  <Text fontWeight="bold">Created At:</Text>{" "}
                   {/* {taskDate.createdAt} */}
-                </Text>
-                <Text display="flex" justifyContent="space-between">
-                  <Text fontWeight="bold">Updated At: </Text>{' '}
-                  {/* {taskDate.updatedAt} */}
                 </Text>
               </Stack>
             </Stack>

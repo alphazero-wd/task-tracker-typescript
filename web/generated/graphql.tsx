@@ -31,17 +31,6 @@ export type ErrorResponse = {
   message: Scalars['String'];
 };
 
-export type FilterBy = {
-  isCompleted?: InputMaybe<Scalars['Boolean']>;
-  isImportant?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type GetTasksInput = {
-  filter?: InputMaybe<FilterBy>;
-  search?: InputMaybe<Scalars['String']>;
-  sort?: InputMaybe<SortBy>;
-};
-
 export type LoginInput = {
   password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
@@ -83,13 +72,8 @@ export type MutationUpdateTaskArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getTasks: Array<Task>;
   me?: Maybe<User>;
-};
-
-
-export type QueryGetTasksArgs = {
-  queries?: InputMaybe<GetTasksInput>;
+  tasks: Array<Task>;
 };
 
 export type SignupInput = {
@@ -97,11 +81,6 @@ export type SignupInput = {
   email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
-};
-
-export type SortBy = {
-  order: Scalars['String'];
-  orderBy?: InputMaybe<Scalars['String']>;
 };
 
 export type Task = {
@@ -142,6 +121,13 @@ export type UserFragmentFragment = { __typename?: 'User', userId: string, userna
 
 export type UserResponseFragmentFragment = { __typename?: 'UserResponse', token?: string | null | undefined, user?: { __typename?: 'User', userId: string, username: string, email: string } | null | undefined, error?: { __typename?: 'ErrorResponse', field?: string | null | undefined, message: string } | null | undefined };
 
+export type AddTaskMutationVariables = Exact<{
+  task: AddTaskInput;
+}>;
+
+
+export type AddTaskMutation = { __typename?: 'Mutation', addTask: { __typename?: 'Task', taskId: string, taskName: string, isCompleted: boolean, isImportant: boolean, createdAt: any } };
+
 export type LoginMutationVariables = Exact<{
   user: LoginInput;
 }>;
@@ -156,12 +142,10 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', signup: { __typename?: 'UserResponse', token?: string | null | undefined, user?: { __typename?: 'User', userId: string, username: string, email: string } | null | undefined, error?: { __typename?: 'ErrorResponse', field?: string | null | undefined, message: string } | null | undefined } };
 
-export type GetTasksQueryVariables = Exact<{
-  queries?: InputMaybe<GetTasksInput>;
-}>;
+export type TasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTasksQuery = { __typename?: 'Query', getTasks: Array<{ __typename?: 'Task', taskId: string, taskName: string, isCompleted: boolean, isImportant: boolean, createdAt: any }> };
+export type TasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', taskId: string, taskName: string, isCompleted: boolean, isImportant: boolean, createdAt: any }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -241,15 +225,12 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ErrorResponse: ResolverTypeWrapper<ErrorResponse>;
-  FilterBy: FilterBy;
   Float: ResolverTypeWrapper<Scalars['Float']>;
-  GetTasksInput: GetTasksInput;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SignupInput: SignupInput;
-  SortBy: SortBy;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
   UpdateTaskInput: UpdateTaskInput;
@@ -263,15 +244,12 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   DateTime: Scalars['DateTime'];
   ErrorResponse: ErrorResponse;
-  FilterBy: FilterBy;
   Float: Scalars['Float'];
-  GetTasksInput: GetTasksInput;
   ID: Scalars['ID'];
   LoginInput: LoginInput;
   Mutation: {};
   Query: {};
   SignupInput: SignupInput;
-  SortBy: SortBy;
   String: Scalars['String'];
   Task: Task;
   UpdateTaskInput: UpdateTaskInput;
@@ -298,8 +276,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryGetTasksArgs, never>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -366,6 +344,39 @@ export const UserResponseFragmentFragmentDoc = gql`
   }
 }
     ${UserFragmentFragmentDoc}`;
+export const AddTaskDocument = gql`
+    mutation AddTask($task: AddTaskInput!) {
+  addTask(task: $task) {
+    ...TaskFragment
+  }
+}
+    ${TaskFragmentFragmentDoc}`;
+export type AddTaskMutationFn = Apollo.MutationFunction<AddTaskMutation, AddTaskMutationVariables>;
+
+/**
+ * __useAddTaskMutation__
+ *
+ * To run a mutation, you first call `useAddTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTaskMutation, { data, loading, error }] = useAddTaskMutation({
+ *   variables: {
+ *      task: // value for 'task'
+ *   },
+ * });
+ */
+export function useAddTaskMutation(baseOptions?: Apollo.MutationHookOptions<AddTaskMutation, AddTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTaskMutation, AddTaskMutationVariables>(AddTaskDocument, options);
+      }
+export type AddTaskMutationHookResult = ReturnType<typeof useAddTaskMutation>;
+export type AddTaskMutationResult = Apollo.MutationResult<AddTaskMutation>;
+export type AddTaskMutationOptions = Apollo.BaseMutationOptions<AddTaskMutation, AddTaskMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($user: LoginInput!) {
   login(user: $user) {
@@ -432,41 +443,40 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-export const GetTasksDocument = gql`
-    query GetTasks($queries: GetTasksInput) {
-  getTasks(queries: $queries) {
+export const TasksDocument = gql`
+    query Tasks {
+  tasks {
     ...TaskFragment
   }
 }
     ${TaskFragmentFragmentDoc}`;
 
 /**
- * __useGetTasksQuery__
+ * __useTasksQuery__
  *
- * To run a query within a React component, call `useGetTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetTasksQuery({
+ * const { data, loading, error } = useTasksQuery({
  *   variables: {
- *      queries: // value for 'queries'
  *   },
  * });
  */
-export function useGetTasksQuery(baseOptions?: Apollo.QueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
+export function useTasksQuery(baseOptions?: Apollo.QueryHookOptions<TasksQuery, TasksQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
+        return Apollo.useQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
       }
-export function useGetTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
+export function useTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TasksQuery, TasksQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
+          return Apollo.useLazyQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
         }
-export type GetTasksQueryHookResult = ReturnType<typeof useGetTasksQuery>;
-export type GetTasksLazyQueryHookResult = ReturnType<typeof useGetTasksLazyQuery>;
-export type GetTasksQueryResult = Apollo.QueryResult<GetTasksQuery, GetTasksQueryVariables>;
+export type TasksQueryHookResult = ReturnType<typeof useTasksQuery>;
+export type TasksLazyQueryHookResult = ReturnType<typeof useTasksLazyQuery>;
+export type TasksQueryResult = Apollo.QueryResult<TasksQuery, TasksQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

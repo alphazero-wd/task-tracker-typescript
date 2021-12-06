@@ -1,0 +1,5 @@
+mutation AddTask($task: AddTaskInput!) {
+  addTask(task: $task) {
+    ...TaskFragment
+  }
+}
