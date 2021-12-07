@@ -75,8 +75,6 @@ const Login: NextPage = () => {
             value={loginValues.password}
             error={data?.login.error}
           />
-
-          <LinkBox color="blue.500">Forgot Password?</LinkBox>
           <Button
             type="submit"
             colorScheme="blue"
@@ -89,7 +87,7 @@ const Login: NextPage = () => {
       </form>
 
       <Text textAlign="center" mt={4}>
-        Don't Have An Account?
+        Don&apos;t Have An Account?
         <LinkBox color="blue.500" display="inline">
           {" "}
           <Link href="/user/signup">Sign up</Link>

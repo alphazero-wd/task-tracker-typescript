@@ -27,7 +27,7 @@ const Tasks: FC = () => {
     if (!user) {
       router.push("/");
     }
-  }, [user]);
+  }, [user, router]);
 
   if (loading) {
     return <Loading />;
@@ -37,7 +37,7 @@ const Tasks: FC = () => {
     return (
       <Stack spacing={4} alignItems="center" mt={8}>
         <Box width={["80%", "60%", "40%", "25%"]}>
-          <Image as={NextImage} src={emptyImg} />
+          <Image as={NextImage} src={emptyImg} alt="" />
         </Box>
         <Heading fontSize="1.5rem">No Tasks Found</Heading>
       </Stack>

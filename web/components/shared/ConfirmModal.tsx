@@ -37,7 +37,7 @@ const ConfirmModal: FC<Props> = ({ isOpen, onClose, confirmationMessage }) => {
             </Text>
             <Stack>
               <FormLabel textAlign="center">
-                Type in "{confirmationMessage}" to confirm.
+                Type in &quot;{confirmationMessage}&quot; to confirm.
               </FormLabel>
               <Input
                 value={confirmValue}
