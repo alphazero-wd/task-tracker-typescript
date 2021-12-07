@@ -104,7 +104,6 @@ describe("Task Resolver", () => {
       email: internet.email(),
       password: "42#$@#DFadjk39r3jASDFADsf",
     }).save();
-    const tasks = await Task.find({});
     const response = await graphqlCall({
       source: UPDATE_TASK_MUTATION,
       variableValues: {
@@ -116,6 +115,7 @@ describe("Task Resolver", () => {
       },
       token: createAccessToken(user),
     });
+    const tasks = await Task.find({});
     expect(response).toMatchObject({
       data: {
         updateTask: {
