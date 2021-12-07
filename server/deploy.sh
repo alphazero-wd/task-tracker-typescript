@@ -1,6 +1,5 @@
 #! /bin/hash
-git init
-heroku git:remote -a pern-todo-api
-git add .
-git commit -am "make it better"
-git push heroku master
+docker ps
+docker container:login
+heroku container:push --app=task-tracker-docker web
+heroku container:release --app=task-tracker-docker web
