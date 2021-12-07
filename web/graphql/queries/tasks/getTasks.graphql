@@ -1,5 +1,5 @@
-query GetTasks($queries: GetTasksInput) {
-  getTasks(queries: $queries) {
+query Tasks {
+  tasks {
     ...TaskFragment
   }
 }
