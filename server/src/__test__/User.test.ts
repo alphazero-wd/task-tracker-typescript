@@ -1,9 +1,10 @@
-import { testConnection } from "../test-utils/db";
-import { Connection } from "typeorm";
-import { name, internet } from "faker";
-import { graphqlCall } from "../test-utils/graphql-call";
-import { User } from "../entity/User";
-import { createAccessToken } from "../utils/token";
+import { testConnection } from '../test-utils/db';
+import { Connection } from 'typeorm';
+import { name, internet } from 'faker';
+import { graphqlCall } from '../test-utils/graphql-call';
+import { User } from '../entity/User';
+import { createAccessToken } from '../utils/token';
+import { hash } from 'bcryptjs';
 
 let connection: Connection;
 
@@ -57,13 +58,13 @@ const ME_QUERY = `
 
 `;
 
-describe("user resolver testing", () => {
-  it("sign up", async () => {
+describe('user resolver testing', () => {
+  it('sign up', async () => {
     const user = {
-      username: "ben",
-      email: "ben@ben.com",
-      password: "324890jfiqnm3k45j23ml3rASDFAR#4",
-      confirmPassword: "324890jfiqnm3k45j23ml3rASDFAR#4",
+      username: 'ben',
+      email: 'ben@ben.com',
+      password: '324890jfiqnm3k45j23ml3rASDFAR#4',
+      confirmPassword: '324890jfiqnm3k45j23ml3rASDFAR#4',
     };
     const response = await graphqlCall({
       source: SIGNUP_MUTATION,
@@ -78,17 +79,21 @@ describe("user resolver testing", () => {
             username: user.username,
             email: user.email,
           },
+          error: null,
         },
-        error: null,
       },
     });
   });
 
-  it("login", async () => {
-    const user = await User.create({
+  it('login', async () => {
+    const user = {
       username: name.firstName(),
       email: internet.email(),
-      password: "adfAr34948234jfka#@$3423",
+      password: 'DFAt434210942rjef%#42341#$fklaerjaf',
+    };
+    const newUser = await User.create({
+      ...user,
+      password: await hash(user.password, 12),
     }).save();
 
     const response = await graphqlCall({
@@ -96,7 +101,7 @@ describe("user resolver testing", () => {
       variableValues: {
         user: {
           usernameOrEmail: user.username,
-          password: "adfAr34948234jfka#@$3423",
+          password: user.password,
         },
       },
     });
@@ -105,9 +110,9 @@ describe("user resolver testing", () => {
       data: {
         login: {
           user: {
-            userId: user.userId.toString(),
-            username: user.username,
-            email: user.email,
+            userId: newUser.userId.toString(),
+            username: newUser.username,
+            email: newUser.email,
           },
           error: null,
         },
@@ -115,11 +120,11 @@ describe("user resolver testing", () => {
     });
   });
 
-  it("me", async () => {
+  it('me', async () => {
     const user = await User.create({
       username: name.firstName(),
       email: internet.email(),
-      password: "adsF#$23489jqdfadFAFAsdfasdf",
+      password: 'adsF#$23489jqdfadFAFAsdfasdf',
     }).save();
     const response = await graphqlCall({
       source: ME_QUERY,

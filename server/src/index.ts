@@ -19,8 +19,10 @@ import { ApolloServer } from 'apollo-server-express';
       url: process.env.DATABASE_URL,
       logging: !__prod__,
       synchronize: !__prod__,
-      // migrations: [path.join(__dirname, './migration/*')],
-      ssl: __prod__ && { rejectUnauthorized: false },
+      migrations: [path.join(__dirname, './migration/*')],
+      ssl: {
+        rejectUnauthorized: false,
+      },
     });
     await connection.runMigrations();
     const app = express();

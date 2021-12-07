@@ -1,10 +1,10 @@
-import { testConnection } from "../test-utils/db";
-import { Connection } from "typeorm";
-import { User } from "../entity/User";
-import { graphqlCall } from "../test-utils/graphql-call";
-import { createAccessToken } from "../utils/token";
-import { Task } from "../entity/Task";
-import { name, internet } from "faker";
+import { testConnection } from '../test-utils/db';
+import { Connection } from 'typeorm';
+import { User } from '../entity/User';
+import { graphqlCall } from '../test-utils/graphql-call';
+import { createAccessToken } from '../utils/token';
+import { Task } from '../entity/Task';
+import { name, internet } from 'faker';
 
 let connection: Connection;
 
@@ -47,15 +47,20 @@ const UPDATE_TASK_MUTATION = `
             isImportant 
         }
     }
-
 `;
 
-describe("Task Resolver", () => {
-  it("tasks", async () => {
+const DELETE_TASK_MUTATION = `
+    mutation DeleteTask($taskId: String!) {
+      deleteTask(taskId: $taskId) 
+    }
+`;
+
+describe('Task Resolver', () => {
+  it('tasks', async () => {
     const user = await User.create({
       username: name.firstName(),
       email: internet.email(),
-      password: "fadkjr345894joimdfDAFwer#$234",
+      password: 'fadkjr345894joimdfDAFwer#$234',
     }).save();
     const response = await graphqlCall({
       source: TASKS_QUERY,
@@ -68,17 +73,17 @@ describe("Task Resolver", () => {
     });
   });
 
-  it("add task", async () => {
+  it('add task', async () => {
     const user = await User.create({
       username: name.firstName(),
       email: internet.email(),
-      password: "#$@#ADSFAdkfjadsf324923084",
+      password: '#$@#ADSFAdkfjadsf324923084',
     }).save();
     const response = await graphqlCall({
       source: ADD_TASK_MUTATION,
       variableValues: {
         task: {
-          taskName: "do homework",
+          taskName: 'do homework',
         },
       },
       token: createAccessToken(user),
@@ -88,8 +93,8 @@ describe("Task Resolver", () => {
     expect(response).toMatchObject({
       data: {
         addTask: {
-          taskId: "1",
-          taskName: "do homework",
+          taskId: '1',
+          taskName: 'do homework',
           isCompleted: false,
           isImportant: false,
         },
@@ -98,18 +103,18 @@ describe("Task Resolver", () => {
     expect(tasks.length).toBe(1);
   });
 
-  it("update task", async () => {
+  it('update task', async () => {
     const user = await User.create({
       username: name.firstName(),
       email: internet.email(),
-      password: "42#$@#DFadjk39r3jASDFADsf",
+      password: '42#$@#DFadjk39r3jASDFADsf',
     }).save();
     const response = await graphqlCall({
       source: UPDATE_TASK_MUTATION,
       variableValues: {
         task: {
           taskId: 1,
-          taskName: "feed the chicken",
+          taskName: 'feed the chicken',
           isImportant: true,
         },
       },
@@ -119,13 +124,37 @@ describe("Task Resolver", () => {
     expect(response).toMatchObject({
       data: {
         updateTask: {
-          taskId: "1",
-          taskName: "feed the chicken",
+          taskId: '1',
+          taskName: 'feed the chicken',
           isCompleted: false,
           isImportant: true,
         },
       },
     });
     expect(tasks.length).toBe(1);
+  });
+
+  it('delete task', async () => {
+    const user = await User.create({
+      username: name.firstName(),
+      email: internet.email(),
+      password: 'fDASFAdslkr3uo4i23u434#$T%$#jjfadlkdfqwu4i',
+    }).save();
+
+    const response = await graphqlCall({
+      source: DELETE_TASK_MUTATION,
+      variableValues: {
+        taskId: '1',
+      },
+      token: createAccessToken(user),
+    });
+    const tasks = await Task.find({});
+    expect(response).toMatchObject({
+      data: {
+        deleteTask: true,
+      },
+    });
+    expect(tasks.length).toBe(0);
+    expect(tasks).toEqual([]);
   });
 });
