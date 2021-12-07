@@ -61,7 +61,7 @@ const Login: NextPage = () => {
         <Stack spacing={4} mt={5}>
           <AuthInput
             onChange={onChange}
-            placeholder="Username Or Email"
+            placeholder="Username or Email"
             name="usernameOrEmail"
             value={loginValues.usernameOrEmail}
             error={data?.login.error}

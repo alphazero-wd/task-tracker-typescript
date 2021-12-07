@@ -1,5 +1,5 @@
-import { FC, useEffect } from 'react';
-import { Box } from '@chakra-ui/layout';
+import { FC, useEffect } from "react";
+import { Box } from "@chakra-ui/layout";
 import {
   Table,
   Thead,
@@ -10,22 +10,22 @@ import {
   Stack,
   Heading,
   Image,
-} from '@chakra-ui/react';
-import { useGetTasksQuery, useMeQuery } from '../../generated/graphql';
-import { useRouter } from 'next/router';
-import Task from './Task';
-import Loading from '../shared/Loading';
-import emptyImg from '../../images/empty.svg';
-import NextImage from 'next/image';
+} from "@chakra-ui/react";
+import { useMeQuery, useTasksQuery } from "../../generated/graphql";
+import { useRouter } from "next/router";
+import Task from "./Task";
+import Loading from "../shared/Loading";
+import emptyImg from "../../images/empty.svg";
+import NextImage from "next/image";
 
 const Tasks: FC = () => {
-  const { data, loading } = useGetTasksQuery();
+  const { data, loading } = useTasksQuery();
   const { data: user } = useMeQuery();
   const router = useRouter();
 
   useEffect(() => {
     if (!user) {
-      router.push('/');
+      router.push("/");
     }
   }, [user]);
 
@@ -33,10 +33,10 @@ const Tasks: FC = () => {
     return <Loading />;
   }
 
-  if (data?.getTasks.length === 0) {
+  if (data?.tasks.length === 0) {
     return (
       <Stack spacing={4} alignItems="center" mt={8}>
-        <Box width={['80%', '60%', '40%', '25%']}>
+        <Box width={["80%", "60%", "40%", "25%"]}>
           <Image as={NextImage} src={emptyImg} />
         </Box>
         <Heading fontSize="1.5rem">No Tasks Found</Heading>
@@ -46,16 +46,18 @@ const Tasks: FC = () => {
 
   return (
     <Table variant="simple" mt={5}>
-      <TableCaption>Total Number of Tasks: 0</TableCaption>
+      <TableCaption>
+        Total Number of Tasks: {data?.tasks.length || 0}
+      </TableCaption>
       <Thead>
         <Tr>
           <Th>Task</Th>
-          <Th display={['none', 'none', 'table-cell']}>Date</Th>
+          <Th display={["none", "none", "table-cell"]}>Date</Th>
           <Th isNumeric>Tools</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {data?.getTasks.map((task) => (
+        {data?.tasks.map(task => (
           <Task key={task.taskId} {...task} />
         ))}
       </Tbody>

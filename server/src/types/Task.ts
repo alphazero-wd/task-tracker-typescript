@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 import { Length } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
+=======
+import { MinLength } from "class-validator";
+import { Field, InputType } from "type-graphql";
+>>>>>>> a413b3a86137c435d0c6b7906df859890a4e565b
 
 @InputType()
 export class AddTaskInput {
   @Field()
-  @Length(1, 64)
+  @MinLength(1)
   taskName!: string;
 
   @Field({ nullable: true })
@@ -20,7 +25,7 @@ export class UpdateTaskInput {
   taskId!: number;
 
   @Field({ nullable: true })
-  @Length(1, 64)
+  @MinLength(1)
   taskName?: string;
 
   @Field({ nullable: true })
